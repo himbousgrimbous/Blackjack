@@ -2,48 +2,72 @@
 #include <time.h>
 #include <stdlib.h>
 
-/*
-int shuff(int cards[])
-{
 
-	int t;
-	int i;
-	int desk[52];
-	for (i = 0; i < 52; i++)
-		desk[i] = (i / 13 + 3) * 100 + i % 13 + 1;
+struct cards {
+	int suit;
+	int face;
+};
 
+int shuff(cards deck[]) {
 	srand(time(NULL));
-	for (i = 0; i < 52; i++)
-	{
+	cards deck_0[52];
+	int t;
+	int s = 0;
+	int f = 0;
+
+	// init deck of cards in deck_0
+	for (int suit = 3; suit < 7; suit++) {
 		
-		do
-		{
-			t = rand() % 52;
-		} while (desk[t] == 0);
-		cards[i] = desk[t];
-		desk[t] = 0;
+		for (int face = 1; face < 14; face++) {
+
+			cards card;
+			card.face = face;
+			card.suit = suit;
+
+			if (s==0) {
+				deck_0[f] = card;
+				//printf("%d %c\n", deck_0[f].face, deck_0[f].suit);
+			}
+
+			else {
+				deck_0[f + s*13] = card;
+				//printf("%d %c\n", deck_0[f + s * 13].face, deck_0[f + s * 13].suit);
+			}
+			f++;
+		}
+		s++;
+		f = 0;
 	}
-	char x = desk[i];
-	printf("%c\n", x);
+	/*for (int i = 0; i < 52; i++) {
+		printf("%d %c\n", deck_0[i].face, deck_0[i].suit);
+	}*/
+	//shuffle deck_0 into deck -- no need to return an array as deck is defined outside of shuff
+	for (int i = 0; i < 52; i++) {
+
+		t = rand() % 52;
+		while (deck_0[t].face == 0) {
+			t = rand() % 52;
+		}
+		deck[i] = deck_0[t];
+		deck_0[t].face = 0;
+	}
+
+	/*for (int i = 0; i < 52; i++) {
+		printf("%d %c\n", deck[i].face, deck[i].suit);
+	}*/
 	return 0;
 }
 
 
 
+void pick(cards card){
 
-void pic(int num)
-{
-	char fl;
-	int po_num;
-
-	fl = num / 100;
-	po_num = num % 100;
-	switch (po_num)
+	switch (card.face)
 	{
 	case 1:
 	{
 
-		printf("vous avez tiré l' AS de  %c\n", fl);
+		printf("vous avez tirÃ© l' AS de  %c\n", card.suit);
 
 		break;
 	}
@@ -58,26 +82,51 @@ void pic(int num)
 	case 10:
 	{
 
-		printf(" vous avez tiré le %2d de %c   \n", fl, po_num);
+		printf(" vous avez tirÃ© le %2d de %c   \n", card.suit, card.face);
 		break;
 	}
 	case 11:
 	{
-		printf("vous avez tiré le Valet de  %c\n", fl);
+		printf("vous avez tirÃ© le Valet de  %c\n", card.suit);
 		break;
 	}
 	case 12:
 	{
-		printf("vous avez tiré la Reine de  %c\n", fl);
+		printf("vous avez tirÃ© la Reine de  %c\n", card.suit);
 		break;
 	}
 	case 13:
 	{
-		printf("vous avez tiré le roi de  %c\n", fl);
+		printf("vous avez tirÃ© le roi de  %c\n", card.suit);
 		break;
 	}
 
 	}
+}
+
+int card_value(cards pcards[], int i) {
+	char d;
+	if (pcards[i].face == 1) {
+
+		printf("Choisissez une valeur pour  %d, entrez 'y' pour 11 ou 'n' pour 1 :\n", i + 1);
+		do { d = getchar(); } while (d != 'y' && d != 'n');
+
+		if (d == 'y') {
+			printf("Vous avez choisis 11 comme valeur de l'AS.\n");
+			return 11;
+		}
+		else if (d == 'n') {
+			printf("Vous avez choisis 1 comme valeur de l'AS.\n");
+			return 1;
+		}
+	}
+	// King, Queen, and Jester = 10pts
+	else if (pcards[i].face > 10) {
+		return 10;
+	}
+
+	else return pcards[i].face;
+
 }
 
 int play(void)
@@ -85,74 +134,53 @@ int play(void)
 	int i;
 	int psum = 0;
 	int bsum = 0;
-	int pcards[5] = { 0 };
-	int bcards[5] = { 0 };
-	int cards[52];
+	cards pcards[5] = { 0 };
+	cards bcards[5] = { 0 };
+	cards deck[52];
 	char go_on;
 	char d;
 
 
 	//Melange cartes
-	shuff(cards);
+	shuff(deck);
 
 	//attribuer les carte
-	pcards[0] = cards[0];
-	pcards[1] = cards[1];
-	bcards[0] = cards[2];
-	bcards[1] = cards[3];
+	pcards[0] = deck[0];
+	pcards[1] = deck[1];
+	bcards[0] = deck[2];
+	bcards[1] = deck[3];
 
 	//les 2 cartes du joueur
 	printf("Une des cartes de l'ordinateur\n");
-	pic(bcards[0]);
+	pick(bcards[0]);
 	printf("\n");
 	printf("\n");
-	pic(pcards[0]);
-	//printf("\n");
-	pic(pcards[1]);
-	//printf("\n");
+	pick(pcards[0]);
+	pick(pcards[1]);
 
-	i = 0;
-	for (i = 0; i < 2; i++)
-	{
-		if (pcards[i] % 100 == 1)
-		{
-			printf("Choisissez une valeur pour  %d, entré 'y' pour 11 ou 'n' pour 1 :\n", i + 1);
-			do {
-				d = getchar();
-			} while (d != 'y' && d != 'n');
+	for (i = 0; i < 2; i++){
 
-			if (d == 'y')
-			{
-				printf("Vous avez choisis 11 comme valeur de l'AS.\n");
-				psum = psum + 11;
-			}
-			else if (d == 'n')
-			{
-				printf("Vous avez choisis 1 comme valeur de l'AS.\n");
-				psum = psum + 1;
-			}
-		}
-		else psum = psum + pcards[i] % 100;
+		psum += card_value(pcards, i);
 
-		if (psum > 21)
-		{
+		if (psum > 21){
+
 			printf("La sommes de vos cartes est maintenant de:%d\n\n", psum);
-			printf("L'ordinateur a gagné !\n");
-			return 1;
+			printf("L'ordinateur a gagnÃ© !\n");
+			return 0;
 		}
-		else if (psum == 21)
-		{
+		else if (psum == 21){
+
 			printf("La sommes de vos cartes est maintenant de:%d\n\n", psum);
-			printf("Félicitation vous avez gagné!\n");
+			printf("FÃ©licitation vous avez gagnÃ©!\n");
 			return 0;
 		}
 	}
 	printf("La sommes de vos cartes est maintenant de:%d\n\n", psum);
 
 	//si le joueur veut une autre carte
-	i = 0;
-	for (i = 0; i < 3; i++)
-	{
+
+	for (i = 0; i < 3; i++){
+
 		char j = 'n';
 
 		printf("Voulez vous une carte de plus ? Entrez y ou n:\n");
@@ -163,40 +191,21 @@ int play(void)
 		if (j == 'y')
 		{
 			printf("vous avez une nouvelle carte.\n");
-			pcards[i + 2] = cards[i + 4];
+			pcards[i + 2] = deck[i + 4];
 			printf("et votre carte %d est :\n", i + 3);
-			pic(pcards[i + 2]);
+			pick(pcards[i + 2]);
 
-			if (pcards[i + 2] % 100 == 1)
-			{
-				printf("Choisissez une valeur pour  %d, entré 'y' pour 11 ou 'n' pour 1 :\n", i + 3);
-				do {
-					d = getchar();
-				} while (d != 'y' && d != 'n');
-				if (d == 'y')
-				{
-					printf("Vous avez choisis 11 comme valeur de l'AS.\n");
-					psum = psum + 11;
-				}
-				else if (d == 'n')
-				{
-					printf("Vous avez choisis 1 comme valeur de l'AS.\n");
-					psum = psum + 1;
-				}
-			}
-
-			else psum = psum + pcards[i + 2] % 100;
-
+			psum += card_value(pcards, i);
 			if (psum > 21)
 			{
 				printf("La sommes de vos cartes est maintenant de:%d\n\n", psum);
-				printf("l'ordinateur a gagné !\n");
+				printf("l'ordinateur a gagnÃ© !\n");
 				return 1;
 			}
 			else if (psum == 21)
 			{
 				printf("La sommes de vos cartes est maintenant de:%d\n\n", psum);
-				printf("Félicitation vous avez gagné!\n");
+				printf("FÃ©licitation vous avez gagnÃ©!\n");
 				return 0;
 			}
 			else printf("La sommes de vos cartes est maintenant de:%d\n\n", psum);
@@ -213,20 +222,19 @@ int play(void)
 		return 0;
 	}
 
-	// 2 carteS de l'ordi
-	//i=0;
+	// 2 cartes de l'ordi
 	printf("Carte de l'ordinateur:\n");
-	pic(bcards[0]);
-	pic(bcards[1]);
+	pick(bcards[0]);
+	pick(bcards[1]);
 
-	if (bcards[0] % 100 + bcards[1] % 100 == 2)
+	if (bcards[0].face + bcards[1].face == 2)
 	{
 		bsum = 12; //si les deux cartes sont des as
 		printf("La sommes des cartes de l'ordinareur est maintenant de: %d\n\n", bsum);
 	}
-	else if (bcards[0] % 100 == 1 || bcards[1] % 100 == 1)
+	else if (bcards[0].face == 1 || bcards[1].face == 1)
 	{
-		bsum = (bcards[0] + bcards[1]) % 100 + (rand() % 2) * 10;
+		bsum = (bcards[0].face + bcards[1].face) % 100 + (rand() % 2) * 10;
 		printf("La sommes des cartes de l'ordinareur est maintenant de:%d\n\n", bsum);
 	}
 
@@ -235,11 +243,11 @@ int play(void)
 	//i=0;
 	for (i = 0; i < 3 && bsum < 17; i++)
 	{
-		bcards[i + 2] = cards[i + 7];
+		bcards[i + 2] = deck[i + 7];
 		printf("La carte de l'ordinateur %d est:\n", i + 3);
-		pic(bcards[i + 2]);
+		pick(bcards[i + 2]);
 
-		if (bcards[i + 2] % 100 == 1)
+		if (bcards[i + 2].face == 1)
 		{
 			if (bsum + 11 <= 21)
 			{
@@ -256,7 +264,7 @@ int play(void)
 		}
 		else
 		{
-			bsum = bsum + bcards[i + 2] % 100;
+			bsum = bsum + bcards[i + 2].face;
 			printf("La sommes des cartes de l'ordinareur est maintenant de:%d\n\n", bsum);
 		}
 	}
@@ -300,7 +308,7 @@ void main() {
 
 	while (menu_val == 0) {
 		printf("Bienvenue dans notre jeu BlackJack!\n"
-			"1\ Consulter les règles du jeux\n"
+			"1\ Consulter les rÃ¨gles du jeux\n"
 			"2\ Jouer au BlackJack \n"
 			"3\ A propos de nous \n"
 			"4\ Quitter le menu \n");
@@ -310,17 +318,17 @@ void main() {
 		switch(nbr){
 
 		case 1:
-			printf("Les règles du jeu sont blebblebleblelble\n"
-				"Le but est d'obtenir un score supérieur à celui du croupier sans dépasser le score de 21\n"
-				"L’as vaut entre 1 et 11 points selon ce que vous avez décidé au départ. La valeur ne peut changer en cours de partie.\n"
+			printf("Les rÃ¨gles du jeu sont blebblebleblelble\n"
+				"Le but est d'obtenir un score supÃ©rieur Ã  celui du croupier sans dÃ©passer le score de 21\n"
+				"Lâ€™as vaut entre 1 et 11 points selon ce que vous avez dÃ©cidÃ© au dÃ©part. La valeur ne peut changer en cours de partie.\n"
 				"Le roi, la reine et le valet valent 10 points.\n"
-				"Les autres cartes entre 2 et 10, la valeur correspondant à ce qui est affiché sur la carte.\n\n"
-				"Au début de chaque tour le joueur selectionne sa mise.\n"
-				"Le croupier distribue ensuite 2 cartes à chaque joueur.\n\n"
-				"Le joueur à le choix de demander plus de cartes, \n"
-				"de doubler sa mise et de recevoir une carte supplémentaire,\n"
-				"d'effectuer un split: si le joueur possède une paire il peut séparer son jeu\n"
-				"en deux mains indépendantes,\n"
+				"Les autres cartes entre 2 et 10, la valeur correspondant Ã  ce qui est affichÃ© sur la carte.\n\n"
+				"Au dÃ©but de chaque tour le joueur selectionne sa mise.\n"
+				"Le croupier distribue ensuite 2 cartes Ã  chaque joueur.\n\n"
+				"Le joueur Ã  le choix de demander plus de cartes, \n"
+				"de doubler sa mise et de recevoir une carte supplÃ©mentaire,\n"
+				"d'effectuer un split: si le joueur possÃ¨de une paire il peut sÃ©parer son jeu\n"
+				"en deux mains indÃ©pendantes,\n"
 				"ne rien faire,\n"
 				"ou encore abandonner");
 			break;
@@ -331,7 +339,7 @@ void main() {
 
 			play();
 
-			printf("\nVoulez vous jouer à nouveau? Entrez 'y' ou 'n':\n");
+			printf("\nVoulez vous jouer Ã  nouveau? Entrez 'y' ou 'n':\n");
 			do {
 				again = getchar();
 			} while (again != 'y' && again != 'n');
@@ -347,14 +355,14 @@ void main() {
 			break;
 
 		case 3:
-			printf("nous sommes une ékip de développeurs compétents, et même hors normes\n"
-				"notre team compte parmis ses membres l'éminent programmeur venu tout droit des\n"
+			printf("nous sommes une Ã©kip de dÃ©veloppeurs compÃ©tents, et mÃªme hors normes\n"
+				"notre team compte parmis ses membres l'Ã©minent programmeur venu tout droit des\n"
 				"plus grandes institutions du Portugal,\n"
-				"après une enfance dorée dans les hautes sphères du 91 il s'est lancé dans le code dès ses 4 ans et demi,\n"
-				"j'ai nommé le grand Brian Catarina-Graca.\n"
-				"Nous comptons également parmis nous Maxime Lorang, un autre développeur de talent,\n"
-				"un vraie génie dans son domaine, d'origine judéo-espagno-portugo-italiano-turco-marocaine, \n"
-				"ce jeune homme a grandit dans les banlieues chaudes de neuilly-sur-Seine, il est prêt à tout pour quitter le quartier\n");
+				"aprÃ¨s une enfance dorÃ©e dans les hautes sphÃ¨res du 91 il s'est lancÃ© dans le code dÃ¨s ses 4 ans et demi,\n"
+				"j'ai nommÃ© le grand Brian Catarina-Graca.\n"
+				"Nous comptons Ã©galement parmis nous Maxime Lorang, un autre dÃ©veloppeur de talent,\n"
+				"un vraie gÃ©nie dans son domaine, d'origine judÃ©o-espagno-portugo-italiano-turco-marocaine, \n"
+				"ce jeune homme a grandit dans les banlieues chaudes de neuilly-sur-Seine, il est prÃªt Ã  tout pour quitter le quartier\n");
 			break;
 		
 		case 4:
@@ -366,28 +374,5 @@ void main() {
 }
 
 
-
-
-
-
-
-
-*/
-
-
-
-
-
-int main() {
-	int deck[13][4];
-
-	for (int suit = 3; suit < 7; suit++)
-	{
-		for (int j = 1; j < 14; j++) {
-			deck[j][suit] = (j, suit);
-		}
-	}
-
-}
-int a,b = deck[2][4];
-printf(%)
+//enum suit{hearts = 3, diamonds = 4, clubs = 5, spades = 6};
+//enum face{ace = 1, 
