@@ -82,7 +82,7 @@ void pick(cards card){
 	case 10:
 	{
 
-		printf(" vous avez tiré le %2d de %c   \n", card.suit, card.face);
+		printf(" vous avez tiré le %2d de %c   \n", card.face, card.suit);
 		break;
 	}
 	case 11:
@@ -120,8 +120,9 @@ int card_value(cards pcards[], int i) {
 			return 1;
 		}
 	}
+	//printf("%d face\n", pcards[i].face);
 	// King, Queen, and Jester = 10pts
-	else if (pcards[i].face > 10) {
+	if (pcards[i].face > 10) {
 		return 10;
 	}
 
@@ -159,7 +160,7 @@ int play(void)
 	pick(pcards[1]);
 
 	for (i = 0; i < 2; i++){
-
+		//printf("%d psum\n", psum);
 		psum += card_value(pcards, i);
 
 		if (psum > 21){
@@ -190,12 +191,10 @@ int play(void)
 
 		if (j == 'y')
 		{
-			printf("vous avez une nouvelle carte.\n");
 			pcards[i + 2] = deck[i + 4];
-			printf("et votre carte %d est :\n", i + 3);
 			pick(pcards[i + 2]);
 
-			psum += card_value(pcards, i);
+			psum += card_value(pcards, i+2);
 			if (psum > 21)
 			{
 				printf("La sommes de vos cartes est maintenant de:%d\n\n", psum);
@@ -333,23 +332,26 @@ void main() {
 				"ou encore abandonner");
 			break;
 
-		case 2: 
-			
-			char again;
+		case 2: {
 
 			play();
 
-			printf("\nVoulez vous jouer à nouveau? Entrez 'y' ou 'n':\n");
-			do {
-				again = getchar();
-			} while (again != 'y' && again != 'n');
+			char again = 'y';
+			while (again == 'y') {
+				printf("\nVoulez vous jouer à nouveau? Entrez 'y' ou 'n':\n");
+				do {
+					scanf_s("\nVoulez vous jouer à nouveau? Entrez 'y' ou 'n':\n%c", &again);
+				} while (again != 'y' && again != 'n');
 
-			if (again == 'y')
-			{
-				printf("\nEt c'est reparti!\n\n");
-				play();
+				if (again != 'y') {
+					break;
+				}
+				else {
+					printf("\nEt c'est reparti!\n\n");
+					play();
+				}
 			}
-
+		}
 
 
 			break;
