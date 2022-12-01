@@ -179,15 +179,17 @@ int play(void)
 	printf("La sommes de vos cartes est maintenant de:%d\n\n", psum);
 
 	//si le joueur veut une autre carte
-
+	
 	for (i = 0; i < 3; i++){
-
-		char j = 'n';
+		char j = ' ';
+		//printf_s("01 le j c'est le %c", &j);
 
 		printf("Voulez vous une carte de plus ? Entrez y ou n:\n");
-		do {
-			j = getchar();
-		} while (j != 'y' && j != 'n');
+		
+		while (j != 'y' && j != 'n') {
+			scanf_s("%c", &j);
+			//printf_s("02 le j c'est le %c", &j);
+		}
 
 		if (j == 'y')
 		{
@@ -199,7 +201,7 @@ int play(void)
 			{
 				printf("La sommes de vos cartes est maintenant de:%d\n\n", psum);
 				printf("l'ordinateur a gagné !\n");
-				return 1;
+				return 0;
 			}
 			else if (psum == 21)
 			{
@@ -211,29 +213,35 @@ int play(void)
 		}
 		else
 		{
-			printf("La sommes de vos cartes est maintenant de:%d\n\n", psum);
+			printf("Vous n'avez pas tiré de carte, la somme de vos cartes est de:%d\n\n", psum);
 			break;
 		}
+		
 	}
-	if (i == 3)
-	{
-		printf("Vous gagnez! parce que la somme de vos 5 cartes n'est pas plus grande que 21!\n");
-		return 0;
-	}
-
+	
+	 
 	// 2 cartes de l'ordi
 	printf("Carte de l'ordinateur:\n");
 	pick(bcards[0]);
 	pick(bcards[1]);
 
-	if (bcards[0].face + bcards[1].face == 2)
-	{
+	if (bcards[0].face + bcards[1].face == 2){
 		bsum = 12; //si les deux cartes sont des as
 		printf("La sommes des cartes de l'ordinareur est maintenant de: %d\n\n", bsum);
 	}
-	else if (bcards[0].face == 1 || bcards[1].face == 1)
-	{
-		bsum = (bcards[0].face + bcards[1].face) % 100 + (rand() % 2) * 10;
+
+	else if (bcards[0].face == 1 || bcards[1].face == 1){
+
+		if (bsum <= 10) {
+			bsum += 11;
+
+			if (bcards[0].face == 1) { bsum += bcards[1].face; }
+			else { bsum += bcards[0].face; }
+		}
+
+		else {
+			bsum += bcards[0].face + bcards[1].face;
+		}
 		printf("La sommes des cartes de l'ordinareur est maintenant de:%d\n\n", bsum);
 	}
 
@@ -267,11 +275,7 @@ int play(void)
 			printf("La sommes des cartes de l'ordinareur est maintenant de:%d\n\n", bsum);
 		}
 	}
-	if (i == 3)
-	{
-		printf("L'ordinateur gagne! parce que la somme de ses 5 cartes n'est pas plus grande que 21!\n");
-		return 1;
-	}
+	
 
 
 
@@ -284,15 +288,15 @@ int play(void)
 	else if (psum == bsum)
 	{
 		printf("Vous avez le meme score que l'ordinateur!\n");
-		return 3;
+		return 0;
 	}
 	else if (psum < bsum)
 	{
 		printf("l'ordinateur gagne!\n");
-		return 1;
+		return 0;
 	}
 
-	return 3;
+	return 0;
 }
 
 
@@ -336,20 +340,31 @@ void main() {
 
 			play();
 
-			char again = 'y';
-			while (again == 'y') {
-				printf("\nVoulez vous jouer à nouveau? Entrez 'y' ou 'n':\n");
-				do {
-					scanf_s("\nVoulez vous jouer à nouveau? Entrez 'y' ou 'n':\n%c", &again);
-				} while (again != 'y' && again != 'n');
+			int loop = 0;
+			char again ;
+			do {
+				printf_s("\nVoulez vous jouer à nouveau? Entrez 'y' ou 'n':\n");
+				scanf_s("%c", &again);
+			} while (again != 'y' && again != 'n');
 
-				if (again != 'y') {
-					break;
-				}
-				else {
-					printf("\nEt c'est reparti!\n\n");
-					play();
-				}
+			//scanf_s("\nVoulez vous jouer à nouveau? Entrez 'y' ou 'n':\n%c", &again);
+
+			while (again == 'y') {
+				
+				//printf_s("\nVoulez vous jouer à nouveau? Entrez 'y' ou 'n':\n");
+				//scanf_s("%c", &again);
+
+				printf("\nEt c'est reparti!\n\n");
+				play();
+
+				do { printf_s("\nVoulez vous jouer à nouveau? Entrez 'y' ou 'n':\n");
+				scanf_s("%c", &again); }
+				while (again != 'y' && again != 'n');
+				
+
+				
+				
+
 			}
 		}
 
