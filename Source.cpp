@@ -342,29 +342,21 @@ void main() {
 
 			int loop = 0;
 			char again ;
+			printf_s("\nVoulez vous jouer à nouveau? Entrez 'y' ou 'n':\n");
+
 			do {
-				printf_s("\nVoulez vous jouer à nouveau? Entrez 'y' ou 'n':\n");
 				scanf_s("%c", &again);
 			} while (again != 'y' && again != 'n');
 
-			//scanf_s("\nVoulez vous jouer à nouveau? Entrez 'y' ou 'n':\n%c", &again);
 
 			while (again == 'y') {
-				
-				//printf_s("\nVoulez vous jouer à nouveau? Entrez 'y' ou 'n':\n");
-				//scanf_s("%c", &again);
 
 				printf("\nEt c'est reparti!\n\n");
 				play();
 
-				do { printf_s("\nVoulez vous jouer à nouveau? Entrez 'y' ou 'n':\n");
-				scanf_s("%c", &again); }
+				printf_s("\nVoulez vous jouer à nouveau? Entrez 'y' ou 'n':\n");
+				do {again = getchar();}
 				while (again != 'y' && again != 'n');
-				
-
-				
-				
-
 			}
 		}
 
