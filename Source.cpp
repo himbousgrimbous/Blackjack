@@ -100,7 +100,7 @@ void pick(cards card) {
 
 int pcard_value(cards pcards[], int i) {
 	char d;
-	if (pcards[i].face == 1) {
+	if (pcards[i - 1].face == 1) {
 
 		printf("Choisissez une valeur pour  l'As, entrez 'y' pour 11 ou 'n' pour 1 :\n");
 		do { d = getchar(); } while (d != 'y' && d != 'n');
@@ -116,11 +116,11 @@ int pcard_value(cards pcards[], int i) {
 	}
 	//printf("%d face\n", pcards[i].face);
 	// King, Queen, and Jester = 10pts
-	if (pcards[i].face > 10) {
+	if (pcards[i - 1].face > 10) {
 		return 10;
 	}
 
-	else return pcards[i].face;
+	else return pcards[i - 1].face;
 
 
 
@@ -128,37 +128,35 @@ int pcard_value(cards pcards[], int i) {
 
 //init computer deck & sum
 // i is lower bound, j is upper bound
-int b_init(cards bcards[], int i, int j) {
+int b_init(cards bcards[], int i, int j, int bsum) {
 
-
-	int temp_sum = 0;
 	for (i; i <= j; i++) {
 
 		if (bcards[i - 1].face == 1) {
 
-			if (temp_sum <= 10) {
-				temp_sum += 11;
+			if (bsum <= 10) {
+				bsum += 11;
 			}
 			else {
-				temp_sum += 1;
+				bsum += 1;
 			}
 		}
 
 		else if (bcards[i - 1].face > 10) {
-			temp_sum += 10;
+			bsum += 10;
 		}
 
 		else {
-			temp_sum += bcards[i - 1].face;
+			bsum += bcards[i - 1].face;
 		}
+		//printf("%d\n", bsum);
 	}
-	return temp_sum;
+	return bsum;
 }
 
 
 
-int play(void)
-{
+int play(void) {
 	int i;
 	int psum = 0;
 	int bsum = 0;
@@ -173,6 +171,7 @@ int play(void)
 	shuff(deck);
 
 	//attribuer les carte
+	//for (int i=0; i<52; i +=2){}
 	pcards[0] = deck[0];
 	pcards[1] = deck[1];
 	bcards[0] = deck[2];
@@ -188,23 +187,9 @@ int play(void)
 	printf("et ");
 	pick(pcards[1]);
 
-	for (i = 0; i < 2; i++) {
-		//printf("%d psum\n", psum);
-		psum += pcard_value(pcards, i);
-
-		if (psum > 21) {
-
-			printf("La sommes de vos cartes est maintenant de:%d\n\n", psum);
-			printf("L'ordinateur a gagné !\n");
-			return 0;
-		}
-		else if (psum == 21) {
-
-			printf("La sommes de vos cartes est maintenant de:%d\n\n", psum);
-			printf("Félicitation vous avez gagné!\n");
-			return 0;
-		}
-	}
+	//set value of first 2 cards
+	psum += pcard_value(pcards, 1);
+	psum += pcard_value(pcards, 2);
 	printf("La sommes de vos cartes est maintenant de:%d\n\n", psum);
 
 	//si le joueur veut une autre carte
@@ -222,17 +207,13 @@ int play(void)
 			printf("Vous avez tiré ");
 			pick(pcards[i + 2]);
 
-			psum += pcard_value(pcards, i + 2);
+			psum += pcard_value(pcards, i + 3);
 			if (psum > 21) {
 				printf("La sommes de vos cartes est maintenant de:%d\n\n", psum);
-				printf("l'ordinateur a gagné !\n");
+				printf("Vous avez perdu, la somme de vos cartes est supérieure à 21!\n");
 				return 0;
 			}
-			else if (psum == 21) {
-				printf("La sommes de vos cartes est maintenant de:%d\n\n", psum);
-				printf("Félicitation vous avez gagné!\n");
-				return 0;
-			}
+
 			else printf("La sommes de vos cartes est maintenant de:%d\n\n", psum);
 		}
 		else {
@@ -249,25 +230,23 @@ int play(void)
 	pick(bcards[1]);
 
 	//init first 2 cards of computer deck
-	bsum += b_init(bcards, 1, 2);
+	bsum += b_init(bcards, 1, 2, bsum);
 	printf("La somme des cartes de l'ordinateur est %d\n", bsum);
 
 	//l'ordi tire tant que bsum n'est pas plus grand que 16
 	//i=0;
 	for (i = 0; i < 13 && bsum < 17; i++) {
 
-		bcards[i + 2] = deck[i + 7];
+		bcards[i + 2] = deck[i + 17];
 		printf("La %deme carte de l'ordinateur est:\n", i + 3);
 		pick(bcards[i + 2]);
-		bsum += b_init(bcards, 3, 5);
+		bsum += b_init(bcards, 3, 5, bsum);
 
 		printf("La sommes des cartes de l'ordinareur est maintenant de:%d\n\n", bsum);
 	}
 
 
-
-
-
+	//results :
 	if (bsum > 21 || psum > bsum)
 	{
 		printf("Vous gagnez!\n");
@@ -283,8 +262,14 @@ int play(void)
 		printf("l'ordinateur gagne!\n");
 		return 0;
 	}
+	else if (psum == 21) {
 
-	return 0;
+		printf("La sommes de vos cartes est maintenant de:%d\n\n", psum);
+		printf("Félicitation vous avez gagné!\n");
+		return 0;
+
+		return 0;
+	}
 }
 
 
