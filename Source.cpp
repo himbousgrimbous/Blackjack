@@ -62,11 +62,8 @@ int shuff(cards deck[]) {
 
 void pick(cards card) {
 
-	switch (card.face)
-	{
-	case 1:
-	{
-
+	switch (card.face) {
+	case 1: {
 		printf("l'As de  %c\n", card.suit);
 
 		break;
@@ -85,18 +82,15 @@ void pick(cards card) {
 		printf("le %2d de %c   \n", card.face, card.suit);
 		break;
 	}
-	case 11:
-	{
+	case 11: {
 		printf("le Valet de  %c\n", card.suit);
 		break;
 	}
-	case 12:
-	{
+	case 12: {
 		printf("la Reine de  %c\n", card.suit);
 		break;
 	}
-	case 13:
-	{
+	case 13: {
 		printf("le Roi de  %c\n", card.suit);
 		break;
 	}
@@ -104,7 +98,7 @@ void pick(cards card) {
 	}
 }
 
-int card_value(cards pcards[], int i) {
+int pcard_value(cards pcards[], int i) {
 	char d;
 	if (pcards[i].face == 1) {
 
@@ -132,14 +126,15 @@ int card_value(cards pcards[], int i) {
 
 }
 
+//init computer deck & sum
+// i is lower bound, j is upper bound
+int b_init(cards bcards[], int i, int j) {
 
-int b_init(cards bcards[]) {
-	//init computer deck & sum
 
 	int temp_sum = 0;
-	for (int i = 0; i < 2; i++) {
+	for (i; i <= j; i++) {
 
-		if (bcards[i].face == 1) {
+		if (bcards[i - 1].face == 1) {
 
 			if (temp_sum <= 10) {
 				temp_sum += 11;
@@ -149,15 +144,14 @@ int b_init(cards bcards[]) {
 			}
 		}
 
-		else if (bcards[i].face > 10) {
+		else if (bcards[i - 1].face > 10) {
 			temp_sum += 10;
 		}
 
 		else {
-			temp_sum += bcards[i].face;
+			temp_sum += bcards[i - 1].face;
 		}
 	}
-	printf("La sommes des cartes de l'ordinareur est maintenant de:%d\n\n", temp_sum);
 	return temp_sum;
 }
 
@@ -168,8 +162,8 @@ int play(void)
 	int i;
 	int psum = 0;
 	int bsum = 0;
-	cards pcards[5] = { 0 };
-	cards bcards[5] = { 0 };
+	cards pcards[15] = { 0 };
+	cards bcards[15] = { 0 };
 	cards deck[52];
 	char go_on;
 	char d;
@@ -196,7 +190,7 @@ int play(void)
 
 	for (i = 0; i < 2; i++) {
 		//printf("%d psum\n", psum);
-		psum += card_value(pcards, i);
+		psum += pcard_value(pcards, i);
 
 		if (psum > 21) {
 
@@ -215,40 +209,33 @@ int play(void)
 
 	//si le joueur veut une autre carte
 
-	for (i = 0; i < 3; i++) {
+	for (i = 0; i < 13; i++) {
 		char j = ' ';
-		//printf_s("01 le j c'est le %c", &j);
-
 		printf("Voulez vous une carte de plus ? Entrez y ou n:\n");
 
 		while (j != 'y' && j != 'n') {
 			scanf_s("%c", &j);
-			//printf_s("02 le j c'est le %c", &j);
 		}
 
-		if (j == 'y')
-		{
+		if (j == 'y') {
 			pcards[i + 2] = deck[i + 4];
 			printf("Vous avez tiré ");
 			pick(pcards[i + 2]);
 
-			psum += card_value(pcards, i + 2);
-			if (psum > 21)
-			{
+			psum += pcard_value(pcards, i + 2);
+			if (psum > 21) {
 				printf("La sommes de vos cartes est maintenant de:%d\n\n", psum);
 				printf("l'ordinateur a gagné !\n");
 				return 0;
 			}
-			else if (psum == 21)
-			{
+			else if (psum == 21) {
 				printf("La sommes de vos cartes est maintenant de:%d\n\n", psum);
 				printf("Félicitation vous avez gagné!\n");
 				return 0;
 			}
 			else printf("La sommes de vos cartes est maintenant de:%d\n\n", psum);
 		}
-		else
-		{
+		else {
 			printf("Vous n'avez pas tiré de carte, la somme de vos cartes est de:%d\n\n", psum);
 			break;
 		}
@@ -257,41 +244,24 @@ int play(void)
 
 
 	// 2 cartes de l'ordi
-	printf("Carte de l'ordinateur:\n");
+	printf("Cartes de l'ordinateur:\n");
 	pick(bcards[0]);
 	pick(bcards[1]);
 
 	//init first 2 cards of computer deck
-	bsum += b_init(bcards);
+	bsum += b_init(bcards, 1, 2);
+	printf("La somme des cartes de l'ordinateur est %d\n", bsum);
 
 	//l'ordi tire tant que bsum n'est pas plus grand que 16
 	//i=0;
-	for (i = 0; i < 3 && bsum < 17; i++) {
+	for (i = 0; i < 13 && bsum < 17; i++) {
 
 		bcards[i + 2] = deck[i + 7];
 		printf("La %deme carte de l'ordinateur est:\n", i + 3);
 		pick(bcards[i + 2]);
+		bsum += b_init(bcards, 3, 5);
 
-		if (bcards[i + 2].face == 1)
-		{
-			if (bsum + 11 <= 21)
-			{
-				printf("l'ordinateur a choisi l'As valant 11\n");
-				bsum = bsum + 11;
-				printf("La sommes des cartes de l'ordinareur est maintenant de:%d\n\n", bsum);
-			}
-			else
-			{
-				printf("l'ordinateur a choisi l'AS valant 1\n");
-				bsum = bsum + 1;
-				printf("La sommes des cartes de l'ordinareur est maintenant de:%d\n\n", bsum);
-			}
-		}
-		else
-		{
-			bsum = bsum + bcards[i + 2].face;
-			printf("La sommes des cartes de l'ordinareur est maintenant de:%d\n\n", bsum);
-		}
+		printf("La sommes des cartes de l'ordinareur est maintenant de:%d\n\n", bsum);
 	}
 
 
@@ -386,14 +356,14 @@ void main() {
 
 		case 3:
 			system("CLS");
-			printf("nous sommes une ékip de développeurs compétents, et même hors normes\n"
+			printf("Nous sommes une ékip de développeurs compétents, et même hors normes\n"
 				"notre team compte parmis ses membres l'éminent programmeur venu tout droit des\n"
 				"plus grandes institutions du Portugal,\n"
 				"après une enfance dorée dans les hautes sphères du 91 il s'est lancé dans le code dès ses 4 ans et demi,\n"
 				"j'ai nommé le grand Brian Catarina-Graca.\n"
 				"Nous comptons également parmis nous Maxime Lorang, un autre développeur de talent,\n"
 				"un vraie génie dans son domaine, d'origine judéo-espagno-portugo-italiano-turco-marocaine, \n"
-				"ce jeune homme a grandit dans les banlieues chaudes de neuilly-sur-Seine, il est prêt à tout pour quitter le quartier\n");
+				"ce jeune homme a grandit dans les banlieues chaudes de neuilly-sur-Seine, il est prêt à tout pour quitter le quartier\n\n");
 			break;
 
 		case 4:
