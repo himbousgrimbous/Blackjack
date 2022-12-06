@@ -237,7 +237,7 @@ int play(void) {
 	//i=0;
 	for (i = 3; i < 15 && bsum < 17; i++) {
 
-		bcards[i] = deck[i + 15];
+		bcards[i] = deck[i + 17];
 		printf("La %deme carte de l'ordinateur est:\n", i);
 		pick(bcards[i]);
 		bsum += b_init(bcards, i);
