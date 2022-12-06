@@ -64,7 +64,13 @@ void pick(cards card) {
 
 	switch (card.face) {
 	case 1: {
-		printf("l'As de  %c\n", card.suit);
+		printf("\n*******\n");
+		printf("*     *\n");
+		printf("* %c   *\n", card.suit);
+		printf("*   A *\n");
+		printf("*     *\n");
+		printf("*******\n");
+		
 
 		break;
 	}
@@ -78,20 +84,41 @@ void pick(cards card) {
 	case 9:
 	case 10:
 	{
-
-		printf("le %2d de %c   \n", card.face, card.suit);
+		printf("\n*******\n");
+		printf("*     *\n");
+		printf("* %c   *\n", card.suit);
+		printf("*  %2d *\n", card.face);
+		printf("*     *\n");
+		printf("*******\n");
 		break;
 	}
 	case 11: {
-		printf("le Valet de  %c\n", card.suit);
+		
+		printf("\n*******\n");
+		printf("*     *\n");
+		printf("* %c   *\n", card.suit);
+		printf("*   J *\n");
+		printf("*     *\n");
+		printf("*******\n");
 		break;
 	}
 	case 12: {
-		printf("la Reine de  %c\n", card.suit);
+		
+		printf("\n*******\n");
+		printf("*     *\n");
+		printf("* %c   *\n", card.suit);
+		printf("*   Q *\n");
+		printf("*     *\n");
+		printf("*******\n");
 		break;
 	}
 	case 13: {
-		printf("le Roi de  %c\n", card.suit);
+		printf("\n*******\n");
+		printf("*     *\n");
+		printf("* %c   *\n", card.suit);
+		printf("*   K *\n");
+		printf("*     *\n");
+		printf("*******\n");
 		break;
 	}
 
@@ -102,15 +129,15 @@ int pcard_value(cards pcards[], int i) {
 	char d;
 	if (pcards[i - 1].face == 1) {
 
-		printf("Choisissez une valeur pour  l'As, entrez 'y' pour 11 ou 'n' pour 1 :\n");
+		printf("choose a value for Ace, enter 'y' for 11 or 'n' for 1 :\n");
 		do { d = getchar(); } while (d != 'y' && d != 'n');
 
 		if (d == 'y') {
-			printf("Vous avez choisis 11 comme valeur de l'As.\n");
+			printf("You chose 11 for the Ace value.\n");
 			return 11;
 		}
 		else if (d == 'n') {
-			printf("Vous avez choisis 1 comme valeur de l'As.\n");
+			printf("You chose 1 for the Ace value.\n");
 			return 1;
 		}
 	}
@@ -129,26 +156,26 @@ int pcard_value(cards pcards[], int i) {
 //init computer deck & sum
 // i is lower bound, j is upper bound
 int b_init(cards bcards[], int i) {
-	 
+
 	//for (i; i <= j; i++) {
 	int card_val = 0;
-		if (bcards[i].face == 1) {
+	if (bcards[i].face == 1) {
 
-			if (card_val <= 10) {
-				card_val = 11;
-			}
-			else {
-				card_val = 1;
-			}
+		if (card_val <= 10) {
+			card_val = 11;
 		}
-
-		else if (bcards[i].face > 10) {
-			card_val = 10;
-		}
-
 		else {
-			card_val = bcards[i].face;
+			card_val = 1;
 		}
+	}
+
+	else if (bcards[i].face > 10) {
+		card_val = 10;
+	}
+
+	else {
+		card_val = bcards[i].face;
+	}
 
 	return card_val;
 }
@@ -177,25 +204,25 @@ int play(void) {
 	bcards[1] = deck[3];
 
 	//les 2 cartes du joueur
-	printf("La première carte de l'ordinateur est ");
+	printf(" The First bot card is: ");
 	pick(bcards[0]);
 	printf("\n");
 	printf("\n");
-	printf("Vous avez tiré ");
+	printf("Your First card is : ");
 	pick(pcards[0]);
-	printf("et ");
+	printf("Your Second card is : ");
 	pick(pcards[1]);
 
 	//set value of first 2 cards
 	psum += pcard_value(pcards, 1);
 	psum += pcard_value(pcards, 2);
-	printf("La sommes de vos cartes est maintenant de:%d\n\n", psum);
+	printf("The Sum of your cards is : %d\n\n", psum);
 
 	//si le joueur veut une autre carte
 
 	for (i = 0; i < 13; i++) {
 		char j = ' ';
-		printf("Voulez vous une carte de plus ? Entrez y ou n:\n");
+		printf("Do you want one more card ? Enter y or n :\n");
 
 		while (j != 'y' && j != 'n') {
 			scanf_s("%c", &j);
@@ -203,20 +230,20 @@ int play(void) {
 
 		if (j == 'y') {
 			pcards[i + 2] = deck[i + 4];
-			printf("Vous avez tiré ");
+			printf("You drew : ");
 			pick(pcards[i + 2]);
 
 			psum += pcard_value(pcards, i + 3);
 			if (psum > 21) {
-				printf("La sommes de vos cartes est maintenant de:%d\n\n", psum);
-				printf("Vous avez perdu, la somme de vos cartes est supérieure à 21!\n");
+				printf("The sum of your cards is now : %d\n\n", psum);
+				printf("You lost, the sum of your cards is greater than 21 !\n");
 				return 0;
 			}
 
-			else printf("La sommes de vos cartes est maintenant de:%d\n\n", psum);
+			else printf("The sum of your cards is now : %d\n\n", psum);
 		}
 		else {
-			printf("Vous n'avez pas tiré de carte, la somme de vos cartes est de:%d\n\n", psum);
+			printf("You didn't draw a card, so the sum of your cards is : %d\n\n", psum);
 			break;
 		}
 
@@ -224,48 +251,48 @@ int play(void) {
 
 
 	// 2 cartes de l'ordi
-	printf("Cartes de l'ordinateur:\n");
+	printf("Bot cards:\n");
 	pick(bcards[0]);
 	pick(bcards[1]);
 
 	//init first 2 cards of computer deck
 	bsum += b_init(bcards, 0);
 	bsum += b_init(bcards, 1);
-	printf("La somme des cartes de l'ordinateur est %d\n", bsum);
+	printf("The sum of bot cards is now : %d\n", bsum);
 
 	//l'ordi tire tant que bsum n'est pas plus grand que 16
 	//i=0;
 	for (i = 3; i < 15 && bsum < 17; i++) {
 
 		bcards[i] = deck[i + 17];
-		printf("La %deme carte de l'ordinateur est:\n", i);
+		printf("the %deme bot card is : \n", i);
 		pick(bcards[i]);
 		bsum += b_init(bcards, i);
 
-		printf("La sommes des cartes de l'ordinareur est maintenant de:%d\n\n", bsum);
+		printf("The sum of bot cards is now : % d\n\n", bsum);
 	}
 
 
 	//results :
 	if (bsum > 21 || psum > bsum)
 	{
-		printf("Vous gagnez!\n");
+		printf("You won !\n");
 		return 0;
 	}
 	else if (psum == bsum)
 	{
-		printf("Vous avez le meme score que l'ordinateur!\n");
+		printf("You have the same score as the bot !\n");
 		return 0;
 	}
 	else if (psum < bsum)
 	{
-		printf("l'ordinateur gagne!\n");
+		printf("Bot won !\n");
 		return 0;
 	}
 	else if (psum == 21) {
 
-		printf("La sommes de vos cartes est maintenant de:%d\n\n", psum);
-		printf("Félicitation vous avez gagné!\n");
+		printf("The sum of your cards is now : %d\n\n", psum);
+		printf("Congratulation you won !\n");
 		return 0;
 
 		return 0;
@@ -283,6 +310,10 @@ void main() {
 	int nbr;
 
 	while (menu_val == 0) {
+					printf("				 ___________________________________________\n"
+				"				|					    |\n	"
+				"			|    Bienvenue dans notre jeu BlackJack_BM  |\n"
+				"				|___________________________________________|\n");
 		printf("Welcome to our Game of Blackjack !\n"
 			"1\ The Rules \n"
 			"2\ Jouer au BlackJack \n"
@@ -295,6 +326,10 @@ void main() {
 
 		case 1:
 			system("CLS");
+							printf("				 ___________________________________________\n"
+				"				|					    |\n	"
+				"			|    Bienvenue dans notre jeu BlackJack_BM  |\n"
+				"				|___________________________________________|\n");
 			printf("Les règles du jeu sont blebblebleblelble\n"
 				"Le but est d'obtenir un score supérieur à celui du croupier sans dépasser le score de 21\n"
 				"L’as vaut entre 1 et 11 points selon ce que vous avez décidé au départ. La valeur ne peut changer en cours de partie.\n"
@@ -312,6 +347,10 @@ void main() {
 
 		case 2: {
 			system("CLS");
+						printf("				 ___________________________________________\n"
+				"				|					    |\n	"
+				"			|    Bienvenue dans notre jeu BlackJack_BM  |\n"
+				"				|___________________________________________|\n");
 			play();
 
 			int loop = 0;
@@ -341,6 +380,10 @@ void main() {
 
 		case 3:
 			system("CLS");
+							printf("				 ___________________________________________\n"
+				"				|					    |\n	"
+				"			|    Bienvenue dans notre jeu BlackJack_BM  |\n"
+				"				|___________________________________________|\n");
 			printf("This game was made are a duo of highly compentent developpers, whose skillset is rarely matched in the field.\n\n"
 
 				"Our team includes among it's members an eminent programmer who came to us \n"
