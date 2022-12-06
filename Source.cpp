@@ -283,11 +283,11 @@ void main() {
 	int nbr;
 
 	while (menu_val == 0) {
-		printf("Bienvenue dans notre jeu BlackJack!\n"
-			"1\ Consulter les règles du jeux\n"
+		printf("Welcome to our Game of Blackjack !\n"
+			"1\ The Rules \n"
 			"2\ Jouer au BlackJack \n"
-			"3\ A propos de nous \n"
-			"4\ Quitter le menu \n");
+			"3\ About us \n"
+			"4\ Leave the menu \n");
 
 		scanf_s("%d", &nbr);
 
