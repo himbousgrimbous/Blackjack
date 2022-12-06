@@ -341,14 +341,20 @@ void main() {
 
 		case 3:
 			system("CLS");
-			printf("Nous sommes une ékip de développeurs compétents, et même hors normes\n"
-				"notre team compte parmis ses membres l'éminent programmeur venu tout droit des\n"
-				"plus grandes institutions du Portugal,\n"
-				"après une enfance dorée dans les hautes sphères du 91 il s'est lancé dans le code dès ses 4 ans et demi,\n"
-				"j'ai nommé le grand Brian Catarina-Graca.\n"
-				"Nous comptons également parmis nous Maxime Lorang, un autre développeur de talent,\n"
-				"un vraie génie dans son domaine, d'origine judéo-espagno-portugo-italiano-turco-marocaine, \n"
-				"ce jeune homme a grandit dans les banlieues chaudes de neuilly-sur-Seine, il est prêt à tout pour quitter le quartier\n\n");
+			printf("This game was made are a duo of highly compentent developpers, whose skillset is rarely matched in the field.\n\n"
+
+				"Our team includes among it's members an eminent programmer who came to us \n"
+				"from the greatest institutions of Portugal, this respectable man truly is a prodigy, \n"
+				"he started coding during a gilded youth in the highest places of the 91' at the early age of barely 4 years old,\n"
+				"he is the Great Mr. Brian Catarina-Graca.\n\n"
+
+				"We are also lucky to have teamed up with Mr. Maxime Lorang, another coding mastermind,\n"
+				"a virtuoso in his field of judeo-espagno-portugo-italiano-turco-marocaine origin, \n"
+				"this young man had a tough upbringing in the difficult red-light suburbs of Neuilly-sur-Seine.\n"
+				"He will do anything to get out of the hood.\n\n"
+
+				"These two engineering cracks have joined forces to deliver you an exquisite digital game of blackjack\n"
+				"and they hope you shall enjoy it thoroughly.\n\n\n);
 			break;
 
 		case 4:
