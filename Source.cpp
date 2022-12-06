@@ -128,30 +128,29 @@ int pcard_value(cards pcards[], int i) {
 
 //init computer deck & sum
 // i is lower bound, j is upper bound
-int b_init(cards bcards[], int i, int j, int bsum) {
+int b_init(cards bcards[], int i) {
+	 
+	//for (i; i <= j; i++) {
+	int card_val = 0;
+		if (bcards[i].face == 1) {
 
-	for (i; i <= j; i++) {
-
-		if (bcards[i - 1].face == 1) {
-
-			if (bsum <= 10) {
-				bsum += 11;
+			if (card_val <= 10) {
+				card_val = 11;
 			}
 			else {
-				bsum += 1;
+				card_val = 1;
 			}
 		}
 
-		else if (bcards[i - 1].face > 10) {
-			bsum += 10;
+		else if (bcards[i].face > 10) {
+			card_val = 10;
 		}
 
 		else {
-			bsum += bcards[i - 1].face;
+			card_val = bcards[i].face;
 		}
-		//printf("%d\n", bsum);
-	}
-	return bsum;
+
+	return card_val;
 }
 
 
@@ -230,17 +229,18 @@ int play(void) {
 	pick(bcards[1]);
 
 	//init first 2 cards of computer deck
-	bsum += b_init(bcards, 1, 2, bsum);
+	bsum += b_init(bcards, 0);
+	bsum += b_init(bcards, 1);
 	printf("La somme des cartes de l'ordinateur est %d\n", bsum);
 
 	//l'ordi tire tant que bsum n'est pas plus grand que 16
 	//i=0;
-	for (i = 0; i < 13 && bsum < 17; i++) {
+	for (i = 3; i < 15 && bsum < 17; i++) {
 
-		bcards[i + 2] = deck[i + 17];
-		printf("La %deme carte de l'ordinateur est:\n", i + 3);
-		pick(bcards[i + 2]);
-		bsum += b_init(bcards, 3, 5, bsum);
+		bcards[i] = deck[i + 15];
+		printf("La %deme carte de l'ordinateur est:\n", i);
+		pick(bcards[i]);
+		bsum += b_init(bcards, i);
 
 		printf("La sommes des cartes de l'ordinareur est maintenant de:%d\n\n", bsum);
 	}
