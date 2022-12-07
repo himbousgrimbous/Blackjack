@@ -198,6 +198,7 @@ int play(int account) {
 	char go_on;
 	char d;
 
+	//if there is no money left on account
 	if (account == 0) {
 		printf("You are broke, you have emptied your wallet gambling,\n"
 			"you must be proud of yourself haha.\n"
@@ -392,6 +393,7 @@ void main() {
 			switch (nbr) {
 
 			case 1:
+				//rules of BJ
 				system("cls");
 				printf("				 ___________________________________________\n"
 					"				|					    |\n	"
@@ -413,12 +415,14 @@ void main() {
 				break;
 
 			case 2: {
+				//play BJ
 				system("cls");
 				printf("				 ___________________________________________\n"
 					"				|					    |\n	"
 					"			|               BlackJack_BM                |\n"
 					"				|___________________________________________|\n\n\n");
 
+				//each session starts with 10 EUR
 				int account = 10;
 				account += play(account);
 
@@ -471,6 +475,7 @@ void main() {
 
 
 			case 3:
+				//about us
 				system("cls");
 				printf("				 ___________________________________________\n"
 					"				|					    |\n	"
