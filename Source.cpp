@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <string>
+#include <conio.h>
 
 
 struct cards {
@@ -72,7 +73,7 @@ void pick(cards card) {
 		printf("*   A *\n");
 		printf("*     *\n");
 		printf("*******\n");
-		
+
 
 		break;
 	}
@@ -95,7 +96,7 @@ void pick(cards card) {
 		break;
 	}
 	case 11: {
-		
+
 		printf("\n*******\n");
 		printf("*     *\n");
 		printf("* %c   *\n", card.suit);
@@ -105,7 +106,7 @@ void pick(cards card) {
 		break;
 	}
 	case 12: {
-		
+
 		printf("\n*******\n");
 		printf("*     *\n");
 		printf("* %c   *\n", card.suit);
@@ -131,7 +132,7 @@ int pcard_value(cards pcards[], int i) {
 	char d;
 	if (pcards[i - 1].face == 1) {
 
-		printf("choose a value for Ace, enter 'y' for 11 or 'n' for 1 :\n");
+		printf("\nChoose a value for the Ace, enter 'y' for 11 or 'n' for 1 :\n");
 		do { d = getchar(); } while (d != 'y' && d != 'n');
 
 		if (d == 'y') {
@@ -139,7 +140,7 @@ int pcard_value(cards pcards[], int i) {
 			return 11;
 		}
 		else if (d == 'n') {
-			printf("You chose 1 for the Ace value.\n");
+			printf("\nYou chose 1 for the Ace value.\n");
 			return 1;
 		}
 	}
@@ -184,10 +185,10 @@ int b_init(cards bcards[], int i) {
 
 
 
-int play(void) {
+int play(int account) {
 	int bet = 0;
 	int src = 1;
-	int account;
+	
 	int i;
 	int psum = 0;
 	int bsum = 0;
@@ -197,6 +198,41 @@ int play(void) {
 	char go_on;
 	char d;
 
+	if (account == 0) {
+		printf("You are broke, you have emptied your wallet gambling,\n"
+			"you must be proud of yourself haha.\n"
+			"You can still play without betting though.\n\n");
+		printf("Type anything to continue.\n");
+
+		char cont = '\0';
+		while (true) {
+			cont = _getch();
+			if (cont != '\0') { break; }
+		}
+
+		system("cls");
+	 }
+
+	else {
+		//demander pour la mise
+		printf("The amount of your account is : %d EUR \n", account);
+		printf("Select the amount which you want to bet in EUR :\n");
+		while (src != 0) {
+			scanf_s("%d", &bet);
+
+			if (bet <= account) {
+				printf("Your bet is %d EUR and it is set  \n\n", bet);
+				account = account - bet;
+				printf("You have %d EUR left in your account\n", account);
+				src = 0;
+
+
+			}
+			else {
+				printf("You have %d EUR on your account, please don't bet more than what you own :) \n", account);
+			}
+		}
+	}
 
 	//Melange cartes
 	shuff(deck);
@@ -209,33 +245,15 @@ int play(void) {
 	bcards[1] = deck[3];
 
 
-	//demander pour la mise
-	printf("The amount of your account is : %d EUR \n", account);
-	printf("select the amount which you want to bet in EUR :\n");
-	while (src != 0) {
-		scanf_s("%d", &bet);
-
-		if (bet <= account ) {
-			printf("Your bet is %d EUR and it is set  \n",bet  );
-			account = account - bet;
-			printf("%d\n", account);
-			src = 0;
-			
-			
-		}
-		else {
-			printf("You have %d EUR on your account, please choose a value under your value account \n",account);
-		}
-	}
 	
 
 
 
+
 	//les 2 cartes du joueur
-	printf("The First dealer card is: ");
+	printf("The Dealer's first card is: ");
 	pick(bcards[0]);
-	printf("\n");
-	printf("\n");
+	printf("\n\n");
 	printf("Your First card is : ");
 	pick(pcards[0]);
 	printf("Your Second card is : ");
@@ -244,35 +262,35 @@ int play(void) {
 	//set value of first 2 cards
 	psum += pcard_value(pcards, 1);
 	psum += pcard_value(pcards, 2);
-	printf("The Sum of your cards is : %d\n\n", psum);
+	printf("\nThe Sum of your cards is : %d\n\n", psum);
 
 	//si le joueur veut une autre carte
 
 	for (i = 0; i < 13; i++) {
 		char j = ' ';
-		printf("Do you want one more card ? Enter y or n :\n");
+		printf("Do you want to draw one more card ? Enter y or n :\n");
 
 		while (j != 'y' && j != 'n') {
-			scanf_s("%c", &j );
+			scanf_s("%c", &j);
 		}
 
 		if (j == 'y') {
 			pcards[i + 2] = deck[i + 4];
-			printf("You drew : ");
+			printf("\nYou drew : ");
 			pick(pcards[i + 2]);
 
 			psum += pcard_value(pcards, i + 3);
 			if (psum > 21) {
-				printf("The sum of your cards is now : %d\n\n", psum);
+				printf("\nThe sum of your cards is now : %d\n\n", psum);
 				printf("You lost, the sum of your cards is greater than 21 !\n");
-				printf("%d", account);
-				return 0;
+				printf("You lost %d EUR", bet);
+				return -bet;
 			}
 
-			else printf("The sum of your cards is now : %d\n\n", psum);
+			else printf("\nThe sum of your cards is now : %d\n\n", psum);
 		}
 		else {
-			printf("You didn't draw a card, so the sum of your cards is : %d\n\n", psum);
+			printf("You did not draw a card, the sum of your cards is : %d\n\n", psum);
 			break;
 		}
 
@@ -280,66 +298,71 @@ int play(void) {
 
 
 	// 2 cartes de l'ordi
-	printf("Dealer cards:\n");
+	printf("Dealer's cards:\n");
 	pick(bcards[0]);
 	pick(bcards[1]);
 
 	//init first 2 cards of computer deck
 	bsum += b_init(bcards, 0);
 	bsum += b_init(bcards, 1);
-	printf("The sum of Dealer cards is now : %d\n", bsum);
+	printf("The sum of the Dealer's cards is now : %d\n", bsum);
 
 	//l'ordi tire tant que bsum n'est pas plus grand que 16
 	//i=0;
 	for (i = 3; i < 15 && bsum < 17; i++) {
 
 		bcards[i] = deck[i + 17];
-		printf("the %deme Dealer card is : \n", i);
+		if (i == 3){
+		printf("the Dealer's 3rd card is : \n");
+		}
+
+		else{
+			printf("the Dealer's %dth card is : \n", i);
+		}
 		pick(bcards[i]);
 		bsum += b_init(bcards, i);
 
-		printf("The sum of Dealer cards is now : % d\n\n", bsum);
+		printf("The sum of the Dealer's cards is now : % d\n\n", bsum);
 	}
 
 
 	//results :
-	if (bsum > 21 || psum > bsum)
+	if (bsum > 21 || psum > bsum && psum != 21 )
 	{
-		printf("You won !\n");
-		account += 2*bet;
-		printf("%d", account);
-		
-		return 0;
+		printf("\nYou won !\n");
+		//account += 2 * bet;
+		printf("You won %d EUR", bet );
+
+		return bet;
 	}
 	else if (psum == bsum)
 	{
-		printf("You have the same score as the Dealer !\n");
-		account += bet;
-		printf("%d", account);
-		
+		printf("\nYou have the same score as the Dealer !\n");
+		//account += bet;
+		printf("You get your bet back");
+
 		return 0;
 	}
 	else if (psum < bsum)
 	{
-		printf("Dealer won !\n");
-		printf("%d", account);
-		
-		return 0;
+		printf("\nDealer won !\n");
+		printf("You lost %d EUR", bet);
+
+		return -bet;
 	}
 	else if (psum == 21) {
 
 		printf("The sum of your cards is now : %d\n\n", psum);
 		printf("Congratulation you won !\n");
-		account += 3*bet;
-		printf("%d", account);
-		
-		return 0;
+		//account += 3 * bet;
+		bet = 1.5 * bet;
+		printf("You earned %d", bet);
 
-		return 0;
+		return bet;
+
+	
 	}
 }
-
-
 
 
 
@@ -350,9 +373,9 @@ void main() {
 
 
 	while (menu_val == 0) {
-		
+
 		while (menu_val == 0) {
-			
+
 			printf("				 ___________________________________________\n"
 				"				|					    |\n	"
 				"			|      Welcome in our  BlackJack_BM         |\n"
@@ -395,16 +418,17 @@ void main() {
 					"				|					    |\n	"
 					"			|               BlackJack_BM                |\n"
 					"				|___________________________________________|\n\n\n");
-				
-				play();
+
+				int account = 10;
+				account += play(account);
 
 				int loop = 0;
 				char again;
-				printf_s("\nDo you want to play again ? Enter 'y' or 'n':\n");
+				printf_s("\n\n\nDo you want to play again ? Enter 'y' or 'n':\n");
 
 
 				do {
-					scanf_s("%c", &again );
+					scanf_s("%c", &again);
 				} while (again != 'y' && again != 'n');
 
 				system("cls");
@@ -418,12 +442,27 @@ void main() {
 						"			|               BlackJack_BM                |\n"
 						"				|___________________________________________|\n\n\n");
 					printf("\nHere we go again !!\n\n");
-					play();
+					account += play(account);
 
 					printf_s("\nDo you want to play again ? Enter 'y' or 'n':\n");
 					do { again = getchar(); } while (again != 'y' && again != 'n');
 				}
 
+				system("cls");
+				printf("\n\n\n\nYou are cashing out %d EUR\n\n", account);
+
+				char men = '\0';
+
+				printf("Type anything to go back to the main menu.\n");
+
+				while (true) {
+					//scanf_s("%c", &men);
+					//if (men != '\0') { break; }
+					men = _getch();
+					if (men != '\0') { break; }
+				}
+
+				system("cls");
 
 				break;
 			}
@@ -457,11 +496,11 @@ void main() {
 				menu_val = 1;
 				break;
 			default:
-				printf("Enter a number between 1 and 4 %c \n",2) ;
-			
+				printf("Enter a number between 1 and 4 %c \n", 2);
+
 			}
 		}
 	}
 }
 //enum suit{hearts = 3, diamonds = 4, clubs = 5, spades = 6};
-//enum face{ace = 1, 
+//enum face{ace = 1, y
