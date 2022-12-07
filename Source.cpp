@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
+#include <string.h>
+#include <string>
 
 
 struct cards {
@@ -183,6 +185,9 @@ int b_init(cards bcards[], int i) {
 
 
 int play(void) {
+	int bet = 0;
+	int src = 1;
+	int account;
 	int i;
 	int psum = 0;
 	int bsum = 0;
@@ -203,8 +208,31 @@ int play(void) {
 	bcards[0] = deck[2];
 	bcards[1] = deck[3];
 
+
+	//demander pour la mise
+	printf("The amount of your account is : %d EUR \n", account);
+	printf("select the amount which you want to bet in EUR :\n");
+	while (src != 0) {
+		scanf_s("%d", &bet);
+
+		if (bet <= account ) {
+			printf("Your bet is %d EUR and it is set  \n",bet  );
+			account = account - bet;
+			printf("%d\n", account);
+			src = 0;
+			
+			
+		}
+		else {
+			printf("You have %d EUR on your account, please choose a value under your value account \n",account);
+		}
+	}
+	
+
+
+
 	//les 2 cartes du joueur
-	printf(" The First bot card is: ");
+	printf("The First dealer card is: ");
 	pick(bcards[0]);
 	printf("\n");
 	printf("\n");
@@ -225,7 +253,7 @@ int play(void) {
 		printf("Do you want one more card ? Enter y or n :\n");
 
 		while (j != 'y' && j != 'n') {
-			scanf_s("%c", &j);
+			scanf_s("%c", &j );
 		}
 
 		if (j == 'y') {
@@ -237,6 +265,7 @@ int play(void) {
 			if (psum > 21) {
 				printf("The sum of your cards is now : %d\n\n", psum);
 				printf("You lost, the sum of your cards is greater than 21 !\n");
+				printf("%d", account);
 				return 0;
 			}
 
@@ -251,25 +280,25 @@ int play(void) {
 
 
 	// 2 cartes de l'ordi
-	printf("Bot cards:\n");
+	printf("Dealer cards:\n");
 	pick(bcards[0]);
 	pick(bcards[1]);
 
 	//init first 2 cards of computer deck
 	bsum += b_init(bcards, 0);
 	bsum += b_init(bcards, 1);
-	printf("The sum of bot cards is now : %d\n", bsum);
+	printf("The sum of Dealer cards is now : %d\n", bsum);
 
 	//l'ordi tire tant que bsum n'est pas plus grand que 16
 	//i=0;
 	for (i = 3; i < 15 && bsum < 17; i++) {
 
 		bcards[i] = deck[i + 17];
-		printf("the %deme bot card is : \n", i);
+		printf("the %deme Dealer card is : \n", i);
 		pick(bcards[i]);
 		bsum += b_init(bcards, i);
 
-		printf("The sum of bot cards is now : % d\n\n", bsum);
+		printf("The sum of Dealer cards is now : % d\n\n", bsum);
 	}
 
 
@@ -277,22 +306,33 @@ int play(void) {
 	if (bsum > 21 || psum > bsum)
 	{
 		printf("You won !\n");
+		account += 2*bet;
+		printf("%d", account);
+		
 		return 0;
 	}
 	else if (psum == bsum)
 	{
-		printf("You have the same score as the bot !\n");
+		printf("You have the same score as the Dealer !\n");
+		account += bet;
+		printf("%d", account);
+		
 		return 0;
 	}
 	else if (psum < bsum)
 	{
-		printf("Bot won !\n");
+		printf("Dealer won !\n");
+		printf("%d", account);
+		
 		return 0;
 	}
 	else if (psum == 21) {
 
 		printf("The sum of your cards is now : %d\n\n", psum);
 		printf("Congratulation you won !\n");
+		account += 3*bet;
+		printf("%d", account);
+		
 		return 0;
 
 		return 0;
@@ -305,109 +345,123 @@ int play(void) {
 
 
 void main() {
-
 	int menu_val = 0;
 	int nbr;
 
+
 	while (menu_val == 0) {
-					printf("				 ___________________________________________\n"
+		
+		while (menu_val == 0) {
+			
+			printf("				 ___________________________________________\n"
 				"				|					    |\n	"
-				"			|    Bienvenue dans notre jeu BlackJack_BM  |\n"
+				"			|      Welcome in our  BlackJack_BM         |\n"
 				"				|___________________________________________|\n");
-		printf("Welcome to our Game of Blackjack !\n"
-			"1\ The Rules \n"
-			"2\ Jouer au BlackJack \n"
-			"3\ About us \n"
-			"4\ Leave the menu \n");
 
-		scanf_s("%d", &nbr);
+			printf("\n  Menu : \n"
+				"1\ Rules\n"
+				"2\ Play \n"
+				"3\ About us \n"
+				"4\ Exit \n");
 
-		switch (nbr) {
+			scanf_s("%d", &nbr);
 
-		case 1:
-			system("CLS");
-							printf("				 ___________________________________________\n"
-				"				|					    |\n	"
-				"			|    Bienvenue dans notre jeu BlackJack_BM  |\n"
-				"				|___________________________________________|\n");
-			printf("Les règles du jeu sont blebblebleblelble\n"
-				"Le but est d'obtenir un score supérieur à celui du croupier sans dépasser le score de 21\n"
-				"L’as vaut entre 1 et 11 points selon ce que vous avez décidé au départ. La valeur ne peut changer en cours de partie.\n"
-				"Le roi, la reine et le valet valent 10 points.\n"
-				"Les autres cartes entre 2 et 10, la valeur correspondant à ce qui est affiché sur la carte.\n\n"
-				"Au début de chaque tour le joueur selectionne sa mise.\n"
-				"Le croupier distribue ensuite 2 cartes à chaque joueur.\n\n"
-				"Le joueur à le choix de demander plus de cartes, \n"
-				"de doubler sa mise et de recevoir une carte supplémentaire,\n"
-				"d'effectuer un split: si le joueur possède une paire il peut séparer son jeu\n"
-				"en deux mains indépendantes,\n"
-				"ne rien faire,\n"
-				"ou encore abandonner\n\n");
-			break;
+			switch (nbr) {
 
-		case 2: {
-			system("CLS");
-						printf("				 ___________________________________________\n"
-				"				|					    |\n	"
-				"			|    Bienvenue dans notre jeu BlackJack_BM  |\n"
-				"				|___________________________________________|\n");
-			play();
+			case 1:
+				system("cls");
+				printf("				 ___________________________________________\n"
+					"				|					    |\n	"
+					"			|               BlackJack_BM                |\n"
+					"				|___________________________________________|\n\n\n");
+				printf("Les règles du jeu sont blebblebleblelble\n"
+					"Le but est d'obtenir un score supérieur à celui du croupier sans dépasser le score de 21\n"
+					"L’as vaut entre 1 et 11 points selon ce que vous avez décidé au départ. La valeur ne peut changer en cours de partie.\n"
+					"Le roi, la reine et le valet valent 10 points.\n"
+					"Les autres cartes entre 2 et 10, la valeur correspondant à ce qui est affiché sur la carte.\n\n"
+					"Au début de chaque tour le joueur selectionne sa mise.\n"
+					"Le croupier distribue ensuite 2 cartes à chaque joueur.\n\n"
+					"Le joueur à le choix de demander plus de cartes, \n"
+					"de doubler sa mise et de recevoir une carte supplémentaire,\n"
+					"d'effectuer un split: si le joueur possède une paire il peut séparer son jeu\n"
+					"en deux mains indépendantes,\n"
+					"ne rien faire,\n"
+					"ou encore abandonner\n\n");
+				break;
 
-			int loop = 0;
-			char again;
-			printf_s("\nVoulez vous jouer à nouveau? Entrez 'y' ou 'n':\n");
-
-			do {
-				scanf_s("%c", &again);
-			} while (again != 'y' && again != 'n');
-
-
-			while (again == 'y') {
-
-				system("CLS");
-				printf("\nEt c'est reparti!\n\n");
+			case 2: {
+				system("cls");
+				printf("				 ___________________________________________\n"
+					"				|					    |\n	"
+					"			|               BlackJack_BM                |\n"
+					"				|___________________________________________|\n\n\n");
+				
 				play();
 
-				printf_s("\nVoulez vous jouer à nouveau? Entrez 'y' ou 'n':\n");
-				do { again = getchar(); } while (again != 'y' && again != 'n');
+				int loop = 0;
+				char again;
+				printf_s("\nDo you want to play again ? Enter 'y' or 'n':\n");
+
+
+				do {
+					scanf_s("%c", &again );
+				} while (again != 'y' && again != 'n');
+
+				system("cls");
+
+
+				while (again == 'y') {
+
+					system("cls");
+					printf("				 ___________________________________________\n"
+						"				|					    |\n	"
+						"			|               BlackJack_BM                |\n"
+						"				|___________________________________________|\n\n\n");
+					printf("\nHere we go again !!\n\n");
+					play();
+
+					printf_s("\nDo you want to play again ? Enter 'y' or 'n':\n");
+					do { again = getchar(); } while (again != 'y' && again != 'n');
+				}
+
+
+				break;
 			}
-			system("CLS");
-			break;
-		}
 
 
 
 
-		case 3:
-			system("CLS");
-							printf("				 ___________________________________________\n"
-				"				|					    |\n	"
-				"			|    Bienvenue dans notre jeu BlackJack_BM  |\n"
-				"				|___________________________________________|\n");
-			printf("This game was made are a duo of highly compentent developpers, whose skillset is rarely matched in the field.\n\n"
+			case 3:
+				system("cls");
+				printf("				 ___________________________________________\n"
+					"				|					    |\n	"
+					"			|               BlackJack_BM                |\n"
+					"				|___________________________________________|\n\n\n");
 
-				"Our team includes among it's members an eminent programmer who came to us \n"
-				"from the greatest institutions of Portugal, this respectable man truly is a prodigy, \n"
-				"he started coding during a gilded youth in the highest places of the 91' at the early age of barely 4 years old,\n"
-				"he is the Great Mr. Brian Catarina-Graca.\n\n"
+				printf("This game was made are a duo of highly compentent developpers, whose skillset is rarely matched in the field.\n\n"
 
-				"We are also lucky to have teamed up with Mr. Maxime Lorang, another coding mastermind,\n"
-				"a virtuoso in his field of judeo-espagno-portugo-italiano-turco-marocaine origin, \n"
-				"this young man had a tough upbringing in the difficult red-light suburbs of Neuilly-sur-Seine.\n"
-				"He will do anything to get out of the hood.\n\n"
+					"Our team includes among it's members an eminent programmer who came to us \n"
+					"from the greatest institutions of Portugal, this respectable man truly is a prodigy, \n"
+					"he started coding during a gilded youth in the highest places of the 91' at the early age of barely 4 years old,\n"
+					"he is the Great Mr. Brian Catarina-Graca.\n\n"
 
-				"These two engineering cracks have joined forces to deliver you an exquisite digital game of blackjack\n"
-				"and they hope you shall enjoy it thoroughly.\n\n\n);
-			break;
+					"We are also lucky to have teamed up with Mr. Maxime Lorang, another coding mastermind,\n"
+					"a virtuoso in his field of judeo-espagno-portugo-italiano-turco-marocaine origin, \n"
+					"this young man had a tough upbringing in the difficult red-light suburbs of Neuilly-sur-Seine.\n"
+					"He will do anything to get out of the hood.\n\n"
 
-		case 4:
-			menu_val = 1;
-			break;
-
+					"These two engineering cracks have joined forces to deliver you an exquisite digital game of blackjack\n"
+					"and they hope you shall enjoy it thoroughly.\n\n\n");
+				break;
+			case 4:
+				menu_val = 1;
+				break;
+			default:
+				printf("Enter a number between 1 and 4 %c \n",2) ;
+			
+			}
 		}
 	}
 }
-
-
 //enum suit{hearts = 3, diamonds = 4, clubs = 5, spades = 6};
 //enum face{ace = 1, 
