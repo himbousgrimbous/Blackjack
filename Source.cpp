@@ -188,7 +188,7 @@ int b_init(cards bcards[], int i) {
 int play(int account) {
 	int bet = 0;
 	int src = 1;
-	
+
 	int i;
 	int psum = 0;
 	int bsum = 0;
@@ -212,7 +212,7 @@ int play(int account) {
 		}
 
 		system("cls");
-	 }
+	}
 
 	else {
 		//demander pour la mise
@@ -246,7 +246,7 @@ int play(int account) {
 	bcards[1] = deck[3];
 
 
-	
+
 
 
 
@@ -283,8 +283,8 @@ int play(int account) {
 			psum += pcard_value(pcards, i + 3);
 			if (psum > 21) {
 				printf("\nThe sum of your cards is now : %d\n\n", psum);
-				printf("You lost, the sum of your cards is greater than 21 !\n");
-				printf("You lost %d EUR", bet);
+				printf("You lost, the sum of your cards is greater than 21 !\n\n");
+				//printf("You lost %d EUR\n\n", bet);
 				return -bet;
 			}
 
@@ -313,11 +313,11 @@ int play(int account) {
 	for (i = 3; i < 15 && bsum < 17; i++) {
 
 		bcards[i] = deck[i + 17];
-		if (i == 3){
-		printf("the Dealer's 3rd card is : \n");
+		if (i == 3) {
+			printf("the Dealer's 3rd card is : \n");
 		}
 
-		else{
+		else {
 			printf("the Dealer's %dth card is : \n", i);
 		}
 		pick(bcards[i]);
@@ -328,11 +328,11 @@ int play(int account) {
 
 
 	//results :
-	if (bsum > 21 || psum > bsum && psum != 21 )
+	if ((bsum > 21|| psum > bsum) && psum != 21)
 	{
 		printf("\nYou won !\n");
 		//account += 2 * bet;
-		printf("You won %d EUR", bet );
+		printf("You earned %d EUR\n\n", (2*bet));
 
 		return bet;
 	}
@@ -340,14 +340,14 @@ int play(int account) {
 	{
 		printf("\nYou have the same score as the Dealer !\n");
 		//account += bet;
-		printf("You get your bet back");
+		printf("You get your bet back\n\n");
 
 		return 0;
 	}
-	else if (psum < bsum)
+	else if (psum < bsum && psum !=21)
 	{
-		printf("\nDealer won !\n");
-		printf("You lost %d EUR", bet);
+		printf("\nDealer won !\n\n");
+		//printf("You lost %d EUR\n\n",bet);
 
 		return -bet;
 	}
@@ -356,12 +356,12 @@ int play(int account) {
 		printf("The sum of your cards is now : %d\n\n", psum);
 		printf("Congratulation you won !\n");
 		//account += 3 * bet;
-		bet = 1.5 * bet;
-		printf("You earned %d", bet);
+		bet += round(1.5 * bet);
+		printf("You earned %d\n\n", (bet));
 
 		return bet;
 
-	
+
 	}
 }
 
@@ -379,7 +379,7 @@ void main() {
 
 			printf("				 ___________________________________________\n"
 				"				|					    |\n	"
-				"			|      Welcome in our  BlackJack_BM         |\n"
+				"			|      Welcome to our  BlackJack_BM         |\n"
 				"				|___________________________________________|\n");
 
 			printf("\n  Menu : \n"
@@ -428,9 +428,10 @@ void main() {
 
 				int loop = 0;
 				char again;
+				printf_s("You have %d EUR left in your account.\n",account);
 				printf_s("\n\n\nDo you want to play again ? Enter 'y' or 'n':\n");
 
-
+				//play again loop
 				do {
 					scanf_s("%c", &again);
 				} while (again != 'y' && again != 'n');
@@ -447,6 +448,7 @@ void main() {
 						"				|___________________________________________|\n\n\n");
 					printf("\nHere we go again !!\n\n");
 					account += play(account);
+					printf_s("You have %d EUR left in your account.\n", account);
 
 					printf_s("\nDo you want to play again ? Enter 'y' or 'n':\n");
 					do { again = getchar(); } while (again != 'y' && again != 'n');
