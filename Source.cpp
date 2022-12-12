@@ -5,6 +5,13 @@
 #include <string>
 #include <conio.h>
 
+void BJ_BM() {
+	printf("				 ___________________________________________\n"
+		"				|					    |\n	"
+		"			|               BlackJack_BM                |\n"
+		"				|___________________________________________|\n\n\n");
+}
+
 
 struct cards {
 	int suit;
@@ -132,15 +139,16 @@ int pcard_value(cards pcards[], int i) {
 	char d;
 	if (pcards[i - 1].face == 1) {
 
-		printf("\nChoose a value for the Ace, enter 'y' for 11 or 'n' for 1 :\n");
+		printf("\nChoose a value for the Ace.\n\n"
+			"Enter 'y' for 11 or 'n' for 1 : ");
 		do { d = getchar(); } while (d != 'y' && d != 'n');
 
 		if (d == 'y') {
-			printf("You chose 11 for the Ace value.\n");
+			printf("\nYou chose 11 for the Ace value.\n\n");
 			return 11;
 		}
 		else if (d == 'n') {
-			printf("\nYou chose 1 for the Ace value.\n");
+			printf("\nYou chose 1 for the Ace value.\n\n");
 			return 1;
 		}
 	}
@@ -157,10 +165,8 @@ int pcard_value(cards pcards[], int i) {
 }
 
 //init computer deck & sum
-// i is lower bound, j is upper bound
 int b_init(cards bcards[], int i) {
 
-	//for (i; i <= j; i++) {
 	int card_val = 0;
 	if (bcards[i].face == 1) {
 
@@ -187,6 +193,8 @@ int b_init(cards bcards[], int i) {
 
 int play(int account) {
 	int bet = 0;
+	//in case of a BJ:
+	int init_bet = 0;
 	int src = 1;
 
 	int i;
@@ -216,17 +224,18 @@ int play(int account) {
 
 	else {
 		//demander pour la mise
-		printf("The amount of your account is : %d EUR \n", account);
-		printf("Select the amount which you want to bet in EUR :\n");
+		printf("The amount of your account is : %d EUR \n\n", account);
+		printf("Type the amount which you want to bet in EUR : ");
 		while (src != 0) {
 			scanf_s("%d", &bet);
 
 			if (bet <= account) {
-				printf("Your bet is %d EUR and it is set  \n\n", bet);
 				account = account - bet;
-				printf("You have %d EUR left in your account\n", account);
+				system("cls");
+				printf("\n\n	Your bet is %d EUR and it is set.		You have %d EUR left in your account\n", bet, account);
+				//printf("", account);
 				src = 0;
-
+				init_bet = bet;
 
 			}
 			else {
@@ -247,10 +256,6 @@ int play(int account) {
 
 
 
-
-
-
-
 	//les 2 cartes du joueur
 	printf("The Dealer's first card is: ");
 	pick(bcards[0]);
@@ -260,27 +265,53 @@ int play(int account) {
 	printf("Your Second card is : ");
 	pick(pcards[1]);
 
+	printf("\n\n");
+
 	//set value of first 2 cards
 	psum += pcard_value(pcards, 1);
 	psum += pcard_value(pcards, 2);
-	printf("\nThe Sum of your cards is : %d\n\n", psum);
 
-	//si le joueur veut une autre carte
 
-	for (i = 0; i < 13; i++) {
-		char j = ' ';
-		printf("Do you want to draw one more card ? Enter y or n :\n");
+	// if BJ with first 2 cards
+	if (psum == 21) {
 
-		while (j != 'y' && j != 'n') {
-			scanf_s("%c", &j);
-		}
+		printf("The Sum of your cards is 21, that's a BlackJack\n\n");
+		printf("Congratulation you won !\n");
+		bet = round(1.5 * bet);
+		printf("You earned %d\n\n", (init_bet + bet));
 
-		if (j == 'y') {
-			pcards[i + 2] = deck[i + 4];
-			printf("\nYou drew : ");
-			pick(pcards[i + 2]);
+		return bet;
+	}
 
-			psum += pcard_value(pcards, i + 3);
+	//choose wether to Double Down or to Draw a card
+	int DD = 0;
+
+	//if the player wants to Double Down (== double bet)
+	if ((8 < psum) && (psum < 12) && (bet != 0) && (account >= bet)) {
+		printf("\n\n"
+			"The Sum of your cards is %d, would you like to Double Down ?\n"
+			"Enter y or n : ", psum);
+		int dub = ' ';
+		do { dub = getchar(); } while (dub != 'y' && dub != 'n');
+
+		//if player choses to DD
+		if (dub == 'y') {
+
+			DD++;
+
+			account = account - bet;
+			bet += bet;
+			init_bet += init_bet;
+			printf("\nYou Doubled Down, your new bet is %d EUR.\n\n", bet);
+			printf("You have %d EUR left in your account\n\n", account);
+
+			pcards[2] = deck[4];
+			printf("\nYour 3rd card is :  ");
+			pick(pcards[2]);
+
+			psum += pcard_value(pcards, 3);
+
+			// if drawn cards add up to more than 21
 			if (psum > 21) {
 				printf("\nThe sum of your cards is now : %d\n\n", psum);
 				printf("You lost, the sum of your cards is greater than 21 !\n\n");
@@ -288,13 +319,87 @@ int play(int account) {
 				return -bet;
 			}
 
+			// if drawn cards add up to a BJ
+			else if (psum == 21) {
+				printf("\nThe Sum of your cards is 21, that's a BlackJack\n\n");
+				printf("Congratulation you won !\n\n");
+				bet = round(1.5 * bet);
+				printf("You earned %d\n\n", (init_bet + bet));
+
+				return bet;
+			}
+
 			else printf("\nThe sum of your cards is now : %d\n\n", psum);
+			printf("Type anything to continue.");
+
+			char cont = '\0';
+			while (true) {
+				cont = _getch();
+				if (cont != '\0') { break; }
+			}
+			printf("\n\n");
+
 		}
 		else {
-			printf("You did not draw a card, the sum of your cards is : %d\n\n", psum);
-			break;
+			printf("You chose Not to Double Down. \n\n");
 		}
+	}
 
+	else {
+		printf("The Sum of your cards is : %d\n\n", psum);
+	}
+
+
+
+	//si le joueur veut une autre carte
+
+	// can Draw a Card only if no Double Down
+	if (DD == 0) {
+		for (i = 0; i < 13 && psum < 21; i++) {
+
+
+			char j = ' ';
+			printf("Do you want to draw one more card ?\n"
+				"Enter y or n : ");
+
+			while (j != 'y' && j != 'n') {
+				scanf_s("%c", &j);
+			}
+
+			if (j == 'y') {
+				pcards[i + 2] = deck[i + 4];
+				printf("\nYou drew : ");
+				pick(pcards[i + 2]);
+
+				psum += pcard_value(pcards, i + 3);
+				// if drawn cards add up to more than 21
+				if (psum > 21) {
+					printf("\nThe sum of your cards is now : %d\n\n", psum);
+					printf("You lost, the sum of your cards is greater than 21 !\n\n");
+					//printf("You lost %d EUR\n\n", bet);
+					return -bet;
+				}
+
+				// if drawn cards add up to a BJ
+				else if (psum == 21) {
+					printf("\nThe Sum of your cards is 21, that's a BlackJack\n\n");
+					printf("Congratulation you won !\n\n");
+					//account += 3 * bet;
+
+					bet = round(1.5 * bet);
+					printf("You earned %d\n\n", (init_bet + bet));
+
+					return bet;
+				}
+
+				else printf("\nThe sum of your cards is now : %d\n\n", psum);
+			}
+			else {
+				printf("\nYou did not draw a card, the sum of your cards is : %d\n\n", psum);
+				break;
+			}
+
+		}
 	}
 
 
@@ -328,11 +433,11 @@ int play(int account) {
 
 
 	//results :
-	if ((bsum > 21|| psum > bsum) && psum != 21)
+	if (bsum > 21 || psum > bsum)
 	{
 		printf("\nYou won !\n");
 		//account += 2 * bet;
-		printf("You earned %d EUR\n\n", (2*bet));
+		printf("You earned %d EUR\n\n", (2 * bet));
 
 		return bet;
 	}
@@ -344,24 +449,12 @@ int play(int account) {
 
 		return 0;
 	}
-	else if (psum < bsum && psum !=21)
+	else if (psum < bsum)
 	{
 		printf("\nDealer won !\n\n");
 		//printf("You lost %d EUR\n\n",bet);
 
 		return -bet;
-	}
-	else if (psum == 21) {
-
-		printf("The sum of your cards is now : %d\n\n", psum);
-		printf("Congratulation you won !\n");
-		//account += 3 * bet;
-		bet += round(1.5 * bet);
-		printf("You earned %d\n\n", (bet));
-
-		return bet;
-
-
 	}
 }
 
@@ -386,19 +479,16 @@ void main() {
 				"1\ Rules\n"
 				"2\ Play \n"
 				"3\ About us \n"
-				"4\ Exit \n");
+				"4\ Exit \n\n");
 
 			scanf_s("%d", &nbr);
 
 			switch (nbr) {
 
-			case 1:
+			case 1: {
 				//rules of BJ
 				system("cls");
-				printf("				 ___________________________________________\n"
-					"				|					    |\n	"
-					"			|               BlackJack_BM                |\n"
-					"				|___________________________________________|\n\n\n");
+				BJ_BM();
 				printf("Les règles du jeu sont blebblebleblelble\n"
 					"Le but est d'obtenir un score supérieur à celui du croupier sans dépasser le score de 21\n"
 					"L’as vaut entre 1 et 11 points selon ce que vous avez décidé au départ. La valeur ne peut changer en cours de partie.\n"
@@ -412,15 +502,27 @@ void main() {
 					"en deux mains indépendantes,\n"
 					"ne rien faire,\n"
 					"ou encore abandonner\n\n");
+
+				char men = '\0';
+
+				printf("Type anything to go back to the main menu.\n");
+
+				while (true) {
+					//scanf_s("%c", &men);
+					//if (men != '\0') { break; }
+					men = _getch();
+					if (men != '\0') { break; }
+				}
+
+				system("cls");
+
 				break;
+			}
 
 			case 2: {
 				//play BJ
 				system("cls");
-				printf("				 ___________________________________________\n"
-					"				|					    |\n	"
-					"			|               BlackJack_BM                |\n"
-					"				|___________________________________________|\n\n\n");
+				BJ_BM();
 
 				//each session starts with 10 EUR
 				int account = 10;
@@ -428,7 +530,7 @@ void main() {
 
 				int loop = 0;
 				char again;
-				printf_s("You have %d EUR left in your account.\n",account);
+				printf_s("You have %d EUR left in your account.\n", account);
 				printf_s("\n\n\nDo you want to play again ? Enter 'y' or 'n':\n");
 
 				//play again loop
@@ -442,10 +544,7 @@ void main() {
 				while (again == 'y') {
 
 					system("cls");
-					printf("				 ___________________________________________\n"
-						"				|					    |\n	"
-						"			|               BlackJack_BM                |\n"
-						"				|___________________________________________|\n\n\n");
+					BJ_BM();
 					printf("\nHere we go again !!\n\n");
 					account += play(account);
 					printf_s("You have %d EUR left in your account.\n", account);
@@ -476,13 +575,10 @@ void main() {
 
 
 
-			case 3:
+			case 3: {
 				//about us
 				system("cls");
-				printf("				 ___________________________________________\n"
-					"				|					    |\n	"
-					"			|               BlackJack_BM                |\n"
-					"				|___________________________________________|\n\n\n");
+				BJ_BM();
 
 				printf("This game was made are a duo of highly compentent developpers, whose skillset is rarely matched in the field.\n\n"
 
@@ -498,7 +594,23 @@ void main() {
 
 					"These two engineering cracks have joined forces to deliver you an exquisite digital game of blackjack\n"
 					"and they hope you shall enjoy it thoroughly.\n\n\n");
+
+				char men = '\0';
+
+				printf("Type anything to go back to the main menu.\n");
+
+				while (true) {
+					//scanf_s("%c", &men);
+					//if (men != '\0') { break; }
+					men = _getch();
+					if (men != '\0') { break; }
+				}
+
+				system("cls");
+
 				break;
+			}
+
 			case 4:
 				menu_val = 1;
 				break;
