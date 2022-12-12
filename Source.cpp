@@ -481,142 +481,147 @@ void main() {
 				"3\ About us \n"
 				"4\ Exit \n\n");
 
-			scanf_s("%d", &nbr);
+			//scanf_s("%d", &nbr);
+			nbr = _getch()-'0';
 
 			switch (nbr) {
 
-			case 1: {
-				//rules of BJ
-				system("cls");
-				BJ_BM();
-				printf("Les règles du jeu sont blebblebleblelble\n"
-					"Le but est d'obtenir un score supérieur à celui du croupier sans dépasser le score de 21\n"
-					"L’as vaut entre 1 et 11 points selon ce que vous avez décidé au départ. La valeur ne peut changer en cours de partie.\n"
-					"Le roi, la reine et le valet valent 10 points.\n"
-					"Les autres cartes entre 2 et 10, la valeur correspondant à ce qui est affiché sur la carte.\n\n"
-					"Au début de chaque tour le joueur selectionne sa mise.\n"
-					"Le croupier distribue ensuite 2 cartes à chaque joueur.\n\n"
-					"Le joueur à le choix de demander plus de cartes, \n"
-					"de doubler sa mise et de recevoir une carte supplémentaire,\n"
-					"d'effectuer un split: si le joueur possède une paire il peut séparer son jeu\n"
-					"en deux mains indépendantes,\n"
-					"ne rien faire,\n"
-					"ou encore abandonner\n\n");
-
-				char men = '\0';
-
-				printf("Type anything to go back to the main menu.\n");
-
-				while (true) {
-					//scanf_s("%c", &men);
-					//if (men != '\0') { break; }
-					men = _getch();
-					if (men != '\0') { break; }
-				}
-
-				system("cls");
-
-				break;
-			}
-
-			case 2: {
-				//play BJ
-				system("cls");
-				BJ_BM();
-
-				//each session starts with 10 EUR
-				int account = 10;
-				account += play(account);
-
-				int loop = 0;
-				char again;
-				printf_s("You have %d EUR left in your account.\n", account);
-				printf_s("\n\n\nDo you want to play again ? Enter 'y' or 'n':\n");
-
-				//play again loop
-				do {
-					scanf_s("%c", &again);
-				} while (again != 'y' && again != 'n');
-
-				system("cls");
-
-
-				while (again == 'y') {
-
+				case 1: {
+					//rules of BJ
 					system("cls");
 					BJ_BM();
-					printf("\nHere we go again !!\n\n");
+					printf("Les règles du jeu sont blebblebleblelble\n"
+						"Le but est d'obtenir un score supérieur à celui du croupier sans dépasser le score de 21\n"
+						"L’as vaut entre 1 et 11 points selon ce que vous avez décidé au départ. La valeur ne peut changer en cours de partie.\n"
+						"Le roi, la reine et le valet valent 10 points.\n"
+						"Les autres cartes entre 2 et 10, la valeur correspondant à ce qui est affiché sur la carte.\n\n"
+						"Au début de chaque tour le joueur selectionne sa mise.\n"
+						"Le croupier distribue ensuite 2 cartes à chaque joueur.\n\n"
+						"Le joueur à le choix de demander plus de cartes, \n"
+						"de doubler sa mise et de recevoir une carte supplémentaire,\n"
+						"d'effectuer un split: si le joueur possède une paire il peut séparer son jeu\n"
+						"en deux mains indépendantes,\n"
+						"ne rien faire,\n"
+						"ou encore abandonner\n\n");
+
+					char men = '\0';
+
+					printf("Type anything to go back to the main menu.\n");
+
+					while (true) {
+						//scanf_s("%c", &men);
+						//if (men != '\0') { break; }
+						men = _getch();
+						if (men != '\0') { break; }
+					}
+
+					system("cls");
+
+					break;
+				}
+
+				case 2: {
+					//play BJ
+					system("cls");
+					BJ_BM();
+
+					//each session starts with 10 EUR
+					int account = 10;
 					account += play(account);
+
+					int loop = 0;
+					char again;
 					printf_s("You have %d EUR left in your account.\n", account);
+					printf_s("\n\n\nDo you want to play again ? Enter 'y' or 'n':\n");
 
-					printf_s("\nDo you want to play again ? Enter 'y' or 'n':\n");
-					do { again = getchar(); } while (again != 'y' && again != 'n');
+					//play again loop
+					do {
+						scanf_s("%c", &again);
+					} while (again != 'y' && again != 'n');
+
+					system("cls");
+
+
+					while (again == 'y') {
+
+						system("cls");
+						BJ_BM();
+						printf("\nHere we go again !!\n\n");
+						account += play(account);
+						printf_s("You have %d EUR left in your account.\n", account);
+
+						printf_s("\nDo you want to play again ? Enter 'y' or 'n':\n");
+						do { again = getchar(); } while (again != 'y' && again != 'n');
+					}
+
+					system("cls");
+					printf("\n\n\n\nYou are cashing out %d EUR\n\n", account);
+
+					char men = '\0';
+
+					printf("Type anything to go back to the main menu.\n");
+
+					while (true) {
+						//scanf_s("%c", &men);
+						//if (men != '\0') { break; }
+						men = _getch();
+						if (men != '\0') { break; }
+					}
+
+					system("cls");
+
+					break;
 				}
 
-				system("cls");
-				printf("\n\n\n\nYou are cashing out %d EUR\n\n", account);
 
-				char men = '\0';
 
-				printf("Type anything to go back to the main menu.\n");
 
-				while (true) {
-					//scanf_s("%c", &men);
-					//if (men != '\0') { break; }
-					men = _getch();
-					if (men != '\0') { break; }
+				case 3: {
+					//about us
+					system("cls");
+					BJ_BM();
+
+					printf("This game was made are a duo of highly compentent developpers, whose skillset is rarely matched in the field.\n\n"
+
+						"Our team includes among it's members an eminent programmer who came to us \n"
+						"from the greatest institutions of Portugal, this respectable man truly is a prodigy, \n"
+						"he started coding during a gilded youth in the highest places of the 91' at the early age of barely 4 years old,\n"
+						"he is the Great Mr. Brian Catarina-Graca.\n\n"
+
+						"We are also lucky to have teamed up with Mr. Maxime Lorang, another coding mastermind,\n"
+						"a virtuoso in his field of judeo-espagno-portugo-italiano-turco-marocaine origin, \n"
+						"this young man had a tough upbringing in the difficult red-light suburbs of Neuilly-sur-Seine.\n"
+						"He will do anything to get out of the hood.\n\n"
+
+						"These two engineering cracks have joined forces to deliver you an exquisite digital game of blackjack\n"
+						"and they hope you shall enjoy it thoroughly.\n\n\n");
+
+					char men = '\0';
+
+					printf("Type anything to go back to the main menu.\n");
+
+					while (true) {
+						//scanf_s("%c", &men);
+						//if (men != '\0') { break; }
+						men = _getch();
+						if (men != '\0') { break; }
+					}
+
+					system("cls");
+
+					break;
 				}
 
-				system("cls");
+				case 4:
+					menu_val = 1;
+					break;
 
-				break;
-			}
+				default: {
 
+					//printf("Enter a number between 1 and 4 %c \n", 2);
 
-
-
-			case 3: {
-				//about us
-				system("cls");
-				BJ_BM();
-
-				printf("This game was made are a duo of highly compentent developpers, whose skillset is rarely matched in the field.\n\n"
-
-					"Our team includes among it's members an eminent programmer who came to us \n"
-					"from the greatest institutions of Portugal, this respectable man truly is a prodigy, \n"
-					"he started coding during a gilded youth in the highest places of the 91' at the early age of barely 4 years old,\n"
-					"he is the Great Mr. Brian Catarina-Graca.\n\n"
-
-					"We are also lucky to have teamed up with Mr. Maxime Lorang, another coding mastermind,\n"
-					"a virtuoso in his field of judeo-espagno-portugo-italiano-turco-marocaine origin, \n"
-					"this young man had a tough upbringing in the difficult red-light suburbs of Neuilly-sur-Seine.\n"
-					"He will do anything to get out of the hood.\n\n"
-
-					"These two engineering cracks have joined forces to deliver you an exquisite digital game of blackjack\n"
-					"and they hope you shall enjoy it thoroughly.\n\n\n");
-
-				char men = '\0';
-
-				printf("Type anything to go back to the main menu.\n");
-
-				while (true) {
-					//scanf_s("%c", &men);
-					//if (men != '\0') { break; }
-					men = _getch();
-					if (men != '\0') { break; }
+					system("cls");
 				}
-
-				system("cls");
-
-				break;
-			}
-
-			case 4:
-				menu_val = 1;
-				break;
-			default:
-				printf("Enter a number between 1 and 4 %c \n", 2);
-
 			}
 		}
 	}
