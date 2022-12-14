@@ -472,12 +472,12 @@ void main() {
 				BJ_BM();
 				printf(
 					"The aim of the game is to obtain a higher score than the dealer without passing throught the limit of 21 \n"
-					"Ace worth either 1 or 11 points, it depends what you wish.\n"
-					"King, Queen and Jack worth 10 points.\n"
-					"The others cards worth between 2 and 10, the value correspont to what is attached to the cards drawn.\n\n"
+					"The Ace is worth either 1 or 11 points, it depends what you wish.\n"
+					"The King, Queen and Jack are worth 10 points.\n"
+					"The others cards are worth between 2 and 10, the value correspont to what is attached to the cards drawn.\n\n"
 					"At the begining of each game the player select his bet.\n"
 					"The Dealer gives 2 cards to each player.\n\n"
-					"The player has the choice to demand more cards, to double his bet and receive a new card\n"
+					"The player has the choice to draw more cards or to double his bet and receive a new card,\n"
 					"the player may also do nothing,\n"
 					"or leave \n\n");
 
