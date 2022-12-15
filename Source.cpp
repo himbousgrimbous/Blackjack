@@ -22,7 +22,7 @@ int shuff(cards deck[]) {
 	srand(time(NULL));
 	cards deck_0[52];
 	int t;
-	int s = 0; 
+	int s = 0;
 	int f = 0;
 
 	// init deck of cards in deck_0
@@ -90,12 +90,12 @@ void pick(cards card) {
 	case 9:
 	case 10:
 	{   printf("\n*******\n");
-		printf("*     *\n");
-		printf("* %c   *\n", card.suit);
-		printf("*  %d  *\n", card.face);
-		printf("*     *\n");
-		printf("*******\n");
-		break;}
+	printf("*     *\n");
+	printf("* %c   *\n", card.suit);
+	printf("*  %d  *\n", card.face);
+	printf("*     *\n");
+	printf("*******\n");
+	break;}
 	case 11: {printf("\n*******\n");
 		printf("*     *\n");
 		printf("* %c   *\n", card.suit);
@@ -151,12 +151,12 @@ int pcard_value(cards pcards[], int i) {
 }
 
 //init computer deck & sum
-int b_init(cards bcards[], int i) {
+int b_init(cards bcards[], int i, int bsum) {
 
 	int card_val = 0;
 	if (bcards[i].face == 1) {
 
-		if (card_val <= 10) {
+		if (bsum <= 10) {
 			card_val = 11;
 		}
 		else {
@@ -211,7 +211,7 @@ int play(int account) {
 		printf("\nType the amount which you want to bet in EUR : ");
 		while (src != 0) {
 			scanf_s("%d", &bet);
-			 
+
 			if (bet <= account) {
 				account = account - bet;
 				system("cls");
@@ -389,8 +389,8 @@ int play(int account) {
 	pick(bcards[1]);
 
 	//init first 2 cards of computer deck
-	bsum += b_init(bcards, 0);
-	bsum += b_init(bcards, 1);
+	bsum += b_init(bcards, 0, bsum);
+	bsum += b_init(bcards, 1, bsum);
 	printf("The sum of the Dealer's cards is now : %d\n", bsum);
 
 	//l'ordi tire tant que bsum n'est pas plus grand que 16
@@ -406,7 +406,7 @@ int play(int account) {
 			printf("the Dealer's %dth card is : \n", i);
 		}
 		pick(bcards[i]);
-		bsum += b_init(bcards, i);
+		bsum += b_init(bcards, i, bsum);
 
 		printf("The sum of the Dealer's cards is now : % d\n\n", bsum);
 	}
@@ -566,7 +566,7 @@ void main() {
 					"he is the Great Mr. Brian Catarina-Graca.\n\n"
 
 					"We are also lucky to have teamed up with Mr. Maxime Lorang, another coding mastermind,\n"
-					"a virtuoso in his field of judeo-espagno-portugo-italiano-turco-marocaine origin, \n"
+					"a virtuoso in his field of judeo-espagno-portugo-italiano-turco-morrocan origin, \n"
 					"this young man had a tough upbringing in the difficult red-light suburbs of Neuilly-sur-Seine.\n"
 					"He will do anything to get out of the hood.\n\n"
 
